@@ -6,6 +6,8 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -86,7 +88,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
 
         LatLng zacGpe = new LatLng(22.76424926, -102.5482729);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zacGpe,12));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zacGpe,15.5f));
 
         mMap.setMyLocationEnabled(true);
         mostrarParadas(googleMap);
@@ -104,9 +106,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             while (rutas.moveToNext()){
                 listaRutas += "\n" + rutas.getString(3);
             }
-
+            int height = 120;
+            int width = 120;
+            BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.ic_autobus);
+            Bitmap b = bitmapdraw.getBitmap();
+            Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
             LatLng parada = new LatLng(res.getDouble(2), res.getDouble(3));
-            googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_autobus)).anchor(0.0f,1.0f)
+            googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
                     .position(parada)
                     .title("Por aquí pasa")
                     .snippet(listaRutas));
