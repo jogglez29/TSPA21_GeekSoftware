@@ -14,6 +14,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.geeksoftware.bussify.databinding.ActivityMapsBinding;
@@ -105,7 +106,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             LatLng parada = new LatLng(res.getDouble(2), res.getDouble(3));
-            googleMap.addMarker(new MarkerOptions()
+            googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_autobus)).anchor(0.0f,1.0f)
                     .position(parada)
                     .title("Por aquí pasa")
                     .snippet(listaRutas));
