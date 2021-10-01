@@ -1,27 +1,20 @@
 package com.geeksoftware.bussify;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.geeksoftware.bussify.databinding.ActivityMapsBinding;
 import com.karumi.dexter.Dexter;
@@ -43,6 +36,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         checkLocationPermission();
         myDb = new DatabaseHelper(this);
         myDb.registrarParadas();
+        myDb.registrarRutas();
+        myDb.registrarParadaRutas();
     }
 
     private void checkLocationPermission() {
@@ -98,15 +93,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void mostrarParadas(GoogleMap googleMap){
-        Cursor res = myDb.getAllData();
+        Cursor res = myDb.getAllDataParadas();
         if (res.getCount() == 0){ // Verificar si hay paradas
             return;
         }
         while(res.moveToNext()){
+            Cursor rutas = myDb.getAllDataRutas(res.getInt(0));
+            String listaRutas = "";
+            while (rutas.moveToNext()){
+                listaRutas +=rutas.getString(3) + ", ";
+            }
+            System.out.println(listaRutas);
             LatLng parada = new LatLng(res.getDouble(2), res.getDouble(3));
             googleMap.addMarker(new MarkerOptions()
-                    .position(parada));
-
+                    .position(parada)
+                    .title("Parada")
+                    .snippet(listaRutas));
         }
     }
 
