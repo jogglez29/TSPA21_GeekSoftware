@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     // Tabla PARADAS
@@ -84,16 +86,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAllDataParadas(){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        Cursor res = sqLiteDatabase.rawQuery("select * from " + TABLE_NAME, null);
-        return res;
+        try {
+            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery("select * from " + TABLE_NAME, null);
+            return res;
+        } catch (SQLiteException ex) {
+            return null;
+        }
     }
 
-
     public Cursor getAllDataRutas(int idParada){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        Cursor res2 = sqLiteDatabase.rawQuery("SELECT * FROM parada_rutas pr" + " JOIN Ruta r " + " ON pr.id_ruta = r.id WHERE pr.id_parada =" +  idParada, null);
-        return res2;
+        try {
+            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+            Cursor res2 = sqLiteDatabase.rawQuery("SELECT * FROM parada_rutas pr" + " JOIN Ruta r " + " ON pr.id_ruta = r.id WHERE pr.id_parada =" +  idParada, null);
+            return res2;
+        } catch (SQLiteException ex) {
+            return null;
+        }
     }
 
     public Cursor getAllDataParadaRutas(){

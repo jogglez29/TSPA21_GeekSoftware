@@ -1,5 +1,6 @@
 package com.geeksoftware.bussify;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
@@ -11,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,6 +20,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.geeksoftware.bussify.databinding.ActivityMapsBinding;
 import com.karumi.dexter.Dexter;
@@ -93,29 +96,57 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMyLocationEnabled(true);
         mostrarParadas(googleMap);
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(MapsActivity.this));
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker marker) {
+                String idParada = marker.getSnippet();
+                mostrarInfoParada(marker,marker.getSnippet());
+                marker.showInfoWindow();
+                marker.setSnippet(idParada);
+                return true;
+            }
+        });
     }
 
     public void mostrarParadas(GoogleMap googleMap){
         Cursor res = myDb.getAllDataParadas();
-        if (res.getCount() == 0){ // Verificar si hay paradas
-            return;
+        if (res == null){ // Verificar si hay paradas
+            Toast.makeText(this,"Ocurrió un error al mostrar las paradas de autobuses",
+                    Toast.LENGTH_LONG).show();
+        } else {
+            if(res.getCount() == 0) {
+                Toast.makeText(this,"No hay paradas registradas",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                while(res.moveToNext()){
+                    int height = 120;
+                    int width = 120;
+                    BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.ic_autobus);
+                    Bitmap b = bitmapdraw.getBitmap();
+                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+                    LatLng parada = new LatLng(res.getDouble(2), res.getDouble(3));
+                    googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
+                            .position(parada)
+                            .title("Por aquí pasa"))
+                            .setSnippet(res.getString(0));
+                }
+            }
         }
-        while(res.moveToNext()){
-            Cursor rutas = myDb.getAllDataRutas(res.getInt(0));
-            String listaRutas = "";
+    }
+
+    public void mostrarInfoParada(Marker marker, String idParada) {
+        String listaRutas = "";
+        Cursor rutas = myDb.getAllDataRutas(Integer.parseInt(idParada));
+        if(rutas == null) {
+            Toast.makeText(this,"Ocurrió un error al mostrar la información" +
+                    " de la parada", Toast.LENGTH_LONG).show();
+            marker.setSnippet("");
+        } else {
             while (rutas.moveToNext()){
                 listaRutas += "\n" + rutas.getString(3);
             }
-            int height = 120;
-            int width = 120;
-            BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.ic_autobus);
-            Bitmap b = bitmapdraw.getBitmap();
-            Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-            LatLng parada = new LatLng(res.getDouble(2), res.getDouble(3));
-            googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
-                    .position(parada)
-                    .title("Por aquí pasa")
-                    .snippet(listaRutas));
+            marker.setSnippet(listaRutas);
         }
     }
 }
