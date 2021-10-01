@@ -88,8 +88,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zacGpe,12));
 
         mMap.setMyLocationEnabled(true);
-
         mostrarParadas(googleMap);
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(MapsActivity.this));
     }
 
     public void mostrarParadas(GoogleMap googleMap){
@@ -101,17 +101,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Cursor rutas = myDb.getAllDataRutas(res.getInt(0));
             String listaRutas = "";
             while (rutas.moveToNext()){
-                listaRutas +=rutas.getString(3) + ", ";
+                listaRutas += "\n" + rutas.getString(3);
             }
-            System.out.println(listaRutas);
+
             LatLng parada = new LatLng(res.getDouble(2), res.getDouble(3));
             googleMap.addMarker(new MarkerOptions()
                     .position(parada)
-                    .title("Parada")
+                    .title("Por aquí pasa")
                     .snippet(listaRutas));
         }
     }
-
-
 }
 
