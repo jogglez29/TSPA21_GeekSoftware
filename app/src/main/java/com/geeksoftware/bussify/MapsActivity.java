@@ -120,8 +120,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Toast.LENGTH_LONG).show();
             } else {
                 while(res.moveToNext()){
-                    int height = 120;
-                    int width = 120;
+                    int height = 128;
+                    int width = 128;
                     BitmapDrawable bitmapdraw = (BitmapDrawable)getDrawable(R.drawable.ic_autobus);
                     Bitmap b = bitmapdraw.getBitmap();
                     Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
