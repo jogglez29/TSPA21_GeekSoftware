@@ -5,7 +5,11 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -15,7 +19,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.geeksoftware.bussify.databinding.ActivityMapsBinding;
 import com.karumi.dexter.Dexter;
@@ -26,6 +32,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+    DatabaseHelper myDb; // Base de datos
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
@@ -34,6 +41,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkLocationPermission();
+        myDb = new DatabaseHelper(this);
+        myDb.registrarParadas();
     }
 
     private void checkLocationPermission() {
@@ -80,10 +89,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
         LatLng zacGpe = new LatLng(22.76424926, -102.5482729);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zacGpe,12));
 
         mMap.setMyLocationEnabled(true);
+
+        mostrarParadas(googleMap);
     }
+
+    public void mostrarParadas(GoogleMap googleMap){
+        Cursor res = myDb.getAllData();
+        if (res.getCount() == 0){ // Verificar si hay paradas
+            return;
+        }
+        while(res.moveToNext()){
+            LatLng parada = new LatLng(res.getDouble(2), res.getDouble(3));
+            googleMap.addMarker(new MarkerOptions()
+                    .position(parada));
+
+        }
+    }
+
+
 }
+
