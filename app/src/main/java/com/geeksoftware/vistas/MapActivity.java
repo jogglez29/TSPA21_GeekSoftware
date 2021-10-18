@@ -1,4 +1,4 @@
-package com.geeksoftware.bussify;
+package com.geeksoftware.vistas;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -14,6 +13,10 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.Toast;
 
+import com.geeksoftware.basedatos.SQLiteDataBase;
+import com.geeksoftware.modelos.Parada;
+import com.geeksoftware.modelos.Ruta;
+import com.geeksoftware.presentadores.MapActivityPresenter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -22,7 +25,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.geeksoftware.bussify.databinding.ActivityMapsBinding;
+import com.geeksoftware.vistas.databinding.ActivityMapsBinding;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -30,20 +33,20 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
-    DatabaseHelper myDb; // Base de datos
+import java.util.List;
+
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, MainActivityView {
+    SQLiteDataBase myDb; // Base de datos
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+    private MapActivityPresenter presentador;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        presentador = new MapActivityPresenter(this);
         checkLocationPermission();
-        myDb = new DatabaseHelper(this);
-        myDb.registrarParadas();
-        myDb.registrarRutas();
-        myDb.registrarParadaRutas();
     }
 
     private void checkLocationPermission() {
@@ -57,7 +60,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // Obtain the SupportMapFragment and get notified when the map is ready to be used.
                 SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
-                mapFragment.getMapAsync(MapsActivity.this);
+                mapFragment.getMapAsync(MapActivity.this);
             }
 
             @Override
@@ -94,14 +97,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zacGpe,15.5f));
 
         mMap.setMyLocationEnabled(true);
-        mostrarParadas(googleMap);
-        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(MapsActivity.this));
+        presentador.cargarParadas();
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(MapActivity.this));
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
                 String idParada = marker.getSnippet();
-                mostrarInfoParada(marker,marker.getSnippet());
+                marker.setSnippet("");
+                presentador.cargarInfoParada(Integer.parseInt(idParada), marker);
                 marker.showInfoWindow();
                 marker.setSnippet(idParada);
                 return true;
@@ -109,45 +113,42 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    public void mostrarParadas(GoogleMap googleMap){
-        Cursor res = myDb.getAllDataParadas();
-        if (res == null){ // Verificar si hay paradas
-            Toast.makeText(this,"Ocurrió un error al mostrar las paradas de autobuses",
-                    Toast.LENGTH_LONG).show();
-        } else {
-            if(res.getCount() == 0) {
-                Toast.makeText(this,"No hay paradas registradas",
-                        Toast.LENGTH_LONG).show();
-            } else {
-                while(res.moveToNext()){
-                    int height = 128;
-                    int width = 128;
-                    BitmapDrawable bitmapdraw = (BitmapDrawable)getDrawable(R.drawable.ic_autobus);
-                    Bitmap b = bitmapdraw.getBitmap();
-                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-                    LatLng parada = new LatLng(res.getDouble(2), res.getDouble(3));
-                    googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
-                            .position(parada)
-                            .title("Por aquí pasa"))
-                            .setSnippet(res.getString(0));
-                }
-            }
+    @Override
+    public void mostrarParadas(List<Parada> listaParadas) {
+        for(Parada parada : listaParadas) {
+            int height = 128;
+            int width = 128;
+            BitmapDrawable bitmapdraw = (BitmapDrawable)getDrawable(R.drawable.ic_autobus);
+            Bitmap b = bitmapdraw.getBitmap();
+            Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+            LatLng ubicacionParada = new LatLng(parada.getLatitud(), parada.getLongitud());
+            mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
+                    .position(ubicacionParada)
+                    .title("Por aquí pasa"))
+                    .setSnippet(String.valueOf(parada.getId()));
         }
     }
 
-    public void mostrarInfoParada(Marker marker, String idParada) {
-        String listaRutas = "";
-        Cursor rutas = myDb.getAllDataRutas(Integer.parseInt(idParada));
-        if(rutas == null) {
-            Toast.makeText(this,"Ocurrió un error al mostrar la información" +
-                    " de la parada", Toast.LENGTH_LONG).show();
-            marker.setSnippet("");
-        } else {
-            while (rutas.moveToNext()){
-                listaRutas += "\n" + rutas.getString(3);
-            }
-            marker.setSnippet(listaRutas);
+    @Override
+    public void mostrarInfoParada(List<Ruta> listaRutas, Marker marcador) {
+        marcador.setSnippet("");
+        String rutas = "";
+        for(Ruta ruta : listaRutas) {
+            rutas += "\n" + ruta.getNombre();
         }
+        marcador.setSnippet(rutas);
+    }
+
+    @Override
+    public void mostrarErrorParadas() {
+        Toast.makeText(this,"Ocurrió un error al mostrar las paradas de autobuses",
+                Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void mostrarErrorInfoParada() {
+        Toast.makeText(this,"Ocurrió un error al mostrar la información" +
+                " de la parada", Toast.LENGTH_LONG).show();
     }
 }
 

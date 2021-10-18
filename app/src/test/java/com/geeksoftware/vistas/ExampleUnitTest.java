@@ -1,4 +1,4 @@
-package com.geeksoftware.bussify;
+package com.geeksoftware.vistas;
 
 import org.junit.Test;
 
