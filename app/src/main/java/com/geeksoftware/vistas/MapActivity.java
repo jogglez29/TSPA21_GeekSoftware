@@ -35,11 +35,16 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.List;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, MainActivityView {
-    SQLiteDataBase myDb; // Base de datos
+/**
+ * Clase de la actividad principal donde se muestra el mapa y sobre él
+ * las paradas de autobuses.
+ */
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, MapActivityView {
 
+    /** Mapa de Google sobre el que se muestran las paradas de autobuses. */
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+    /** Enlace de la vista con el procesamiento de la lógica de negocio y los datos. */
     private MapActivityPresenter presentador;
 
     @Override
@@ -49,6 +54,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         checkLocationPermission();
     }
 
+    /**
+     * Revisa si se tiene el acceso a la localización del dispositivo y lo solicita
+     * en caso de que no esté otorgado.
+     */
     private void checkLocationPermission() {
 
         Dexter.withContext(this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {

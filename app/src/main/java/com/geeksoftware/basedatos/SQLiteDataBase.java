@@ -14,42 +14,64 @@ import com.geeksoftware.modelos.Ruta;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manipula la base de datos directamente.
+ */
 public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDatos {
-    // Tabla PARADAS
+
+    /** Nombre de la base de datos. */
     public static final String DATABASE_NAME = "bussify.db";
-    public static final String TABLE_NAME = "parada";
-    public static final String COL_1 = "ID";
-    public static final String COL_2 = "DESCRIPCION";
-    public static final String COL_3 = "LATITUD";
-    public static final String COL_4 = "LONGITUD";
 
-    // Tabla RUTA
-    public static final String TABLE_RUTA_NAME = "ruta";
-    public static final String RUTA_COL_1 = "ID";
-    public static final String RUTA_COL_2 = "NOMBRE";
-    public static final String RUTA_COL_3 = "COLOR";
+                    /** TABLA PARADA */
+    /** Nombre de la tabla de las paradas de autobuses. */
+    public static final String TABLA_PARADA = "parada";
+    /** Nombre de la primer columna de la tabla Parada. */
+    public static final String PARADA_COL_ID = "ID";
+    /** Nombre de la segunda columna de la tabla Parada. */
+    public static final String PARADA_COL_DESC = "DESCRIPCION";
+    /** Nombre de la tercera columna de la tabla Parada.  */
+    public static final String PARADA_COL_LAT = "LATITUD";
+    /** Nombre de la cuarta columna de la tabla Parada.  */
+    public static final String PARADA_COL_LONG = "LONGITUD";
 
-    // Tabla PARADA_RUTAS;
-    public static final String TABLE_PARADA_RUTA_NAME = "parada_rutas";
-    public static final String PARADA_RUTA_COL_1 = "ID_PARADA";
-    public static final String PARADA_RUTA_COL_2 = "ID_RUTA";
+                    /** TABLA RUTA */
+    /** Nombre de la tabla de las rutas. */
+    public static final String TABLA_RUTA = "ruta";
+    /** Nombre de la primer columna de la tabla Ruta. */
+    public static final String RUTA_COL_ID = "ID";
+    /** Nombre de la segunda columna de la tabla Ruta. */
+    public static final String RUTA_COL_NOM = "NOMBRE";
+    /** Nombre de la tercera columna de la tabla Color. */
+    public static final String RUTA_COL_COLOR = "COLOR";
 
+                    /** Tabla PARADAS_RUTAS */
+    /** Nombre de la tabla que establece relaciones entre paradas y rutas. */
+    public static final String TABLA_PARADA_RUTA = "parada_rutas";
+    /** Nombre de la primer columna de la tabla paradas_rutas. */
+    public static final String PARADA_RUTA_COL_ID_PAR = "ID_PARADA";
+    /** Nombre de la segunda columna de la tabla paradas_rutas. */
+    public static final String PARADA_RUTA_COL_ID_RUTA = "ID_RUTA";
+
+    /**
+     * Define el constructor de la clase.
+     * @param context Contexto a utilizarse
+     */
     public SQLiteDataBase(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("create table " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, DESCRIPCION TEXT, LATITUD REAL, LONGITUD REAL, UNIQUE(LATITUD,LONGITUD))");
-        sqLiteDatabase.execSQL("create table " + TABLE_RUTA_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, NOMBRE TEXT UNIQUE, COLOR TEXT DEFAULT '#ffffff')");
-        sqLiteDatabase.execSQL("create table " + TABLE_PARADA_RUTA_NAME + "(ID_PARADA INTEGER, ID_RUTA INTEGER, FOREIGN KEY(ID_PARADA) REFERENCES PARADA(ID), FOREIGN KEY(ID_RUTA) REFERENCES RUTA(ID), PRIMARY KEY(ID_PARADA, ID_RUTA))");
+        sqLiteDatabase.execSQL("create table " + TABLA_PARADA + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, DESCRIPCION TEXT, LATITUD REAL, LONGITUD REAL, UNIQUE(LATITUD,LONGITUD))");
+        sqLiteDatabase.execSQL("create table " + TABLA_RUTA + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, NOMBRE TEXT UNIQUE, COLOR TEXT DEFAULT '#ffffff')");
+        sqLiteDatabase.execSQL("create table " + TABLA_PARADA_RUTA + "(ID_PARADA INTEGER, ID_RUTA INTEGER, FOREIGN KEY(ID_PARADA) REFERENCES PARADA(ID), FOREIGN KEY(ID_RUTA) REFERENCES RUTA(ID), PRIMARY KEY(ID_PARADA, ID_RUTA))");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_PARADA_RUTA_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_RUTA_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_PARADA_RUTA);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_PARADA);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_RUTA);
         onCreate(sqLiteDatabase);
     }
 
@@ -57,9 +79,9 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
     public boolean agregarRuta(Ruta ruta) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(RUTA_COL_2, ruta.getNombre());
-        contentValues.put(RUTA_COL_3, ruta.getColor());
-        long result = sqLiteDatabase.insert(TABLE_RUTA_NAME, null, contentValues);
+        contentValues.put(RUTA_COL_NOM, ruta.getNombre());
+        contentValues.put(RUTA_COL_COLOR, ruta.getColor());
+        long result = sqLiteDatabase.insert(TABLA_RUTA, null, contentValues);
         if (result == -1)
             return false;
         else
@@ -70,10 +92,10 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
     public boolean agregarParada(Parada parada) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_2, parada.getDescripcion());
-        contentValues.put(COL_3, parada.getLatitud());
-        contentValues.put(COL_4, parada.getLongitud());
-        long result = sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
+        contentValues.put(PARADA_COL_DESC, parada.getDescripcion());
+        contentValues.put(PARADA_COL_LAT, parada.getLatitud());
+        contentValues.put(PARADA_COL_LONG, parada.getLongitud());
+        long result = sqLiteDatabase.insert(TABLA_PARADA, null, contentValues);
         if (result == -1)
             return false;
         else
@@ -84,9 +106,9 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
     public boolean agregarParadaRuta(Parada parada, Ruta ruta) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(PARADA_RUTA_COL_1, parada.getId());
-        contentValues.put(PARADA_RUTA_COL_2, ruta.getId());
-        long result = sqLiteDatabase.insert(TABLE_PARADA_RUTA_NAME, null, contentValues);
+        contentValues.put(PARADA_RUTA_COL_ID_PAR, parada.getId());
+        contentValues.put(PARADA_RUTA_COL_ID_RUTA, ruta.getId());
+        long result = sqLiteDatabase.insert(TABLA_PARADA_RUTA, null, contentValues);
         if (result == -1)
             return false;
         else
@@ -97,7 +119,7 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
     public List<Ruta> obtenerRutas() {
         try {
             SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-            Cursor res = sqLiteDatabase.rawQuery("select * from " + TABLE_RUTA_NAME, null);
+            Cursor res = sqLiteDatabase.rawQuery("select * from " + TABLA_RUTA, null);
             List<Ruta> listaRutas = new ArrayList<>();
 
             while (res.moveToNext()) {
@@ -117,7 +139,7 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
     public List<Parada> obtenerParadas() {
         try {
             SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-            Cursor res = sqLiteDatabase.rawQuery("select * from " + TABLE_NAME, null);
+            Cursor res = sqLiteDatabase.rawQuery("select * from " + TABLA_PARADA, null);
             List<Parada> listaParadas = new ArrayList<>();
 
             while (res.moveToNext()) {

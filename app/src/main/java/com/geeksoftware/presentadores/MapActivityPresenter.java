@@ -6,17 +6,28 @@ import com.geeksoftware.basedatos.ConectorBaseDatos;
 import com.geeksoftware.basedatos.SQLiteDataBase;
 import com.geeksoftware.modelos.Parada;
 import com.geeksoftware.modelos.Ruta;
-import com.geeksoftware.vistas.MainActivityView;
+import com.geeksoftware.vistas.MapActivityView;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.List;
 
+/**
+ * Recibe las interacciones del usuario echas a través de una MapActivityView
+ * y consulta u obtiene los datos correspondientes para actualizar esta misma
+ * vista con la información obtenida.
+ */
 public class MapActivityPresenter {
 
-    private MainActivityView vista;
+    /** Vista del mapa a enlazar con el presentador. */
+    private MapActivityView vista;
+    /** Motor de base de datos a usar. */
     private ConectorBaseDatos baseDatos;
 
-    public MapActivityPresenter(MainActivityView vista) {
+    /**
+     * Define el constructor del presentador.
+     * @param vista Interfaz de usuario a ser enlazada con el presentador.
+     */
+    public MapActivityPresenter(MapActivityView vista) {
         this.vista = vista;
         baseDatos = new SQLiteDataBase((Context) vista);
         registrarParadas();
@@ -24,6 +35,9 @@ public class MapActivityPresenter {
         registrarParadaRutas();
     }
 
+    /**
+     * Extrae todas las paradas de autobuses que existen en la base de datos.
+     */
     public void cargarParadas() {
         List<Parada> listaParadas = baseDatos.obtenerParadas();
         if(listaParadas != null) {
@@ -33,6 +47,12 @@ public class MapActivityPresenter {
         }
     }
 
+    /**
+     * Extrae la información de las rutas que se detienen en una determinada parada de autobus.
+     * @param idParada Identificador de la parada a consultar sus rutas.
+     * @param marcador Punto del mapa donde se mostrará la información de las rutas
+     *                 que se detienen ahí.
+     */
     public void cargarInfoParada(Integer idParada, Marker marcador) {
         List<Ruta> listaRutas = baseDatos.obtenerRutasPorParada(idParada);
         if(listaRutas !=  null) {
@@ -42,7 +62,9 @@ public class MapActivityPresenter {
         }
     }
 
-
+    /**
+     * Realiza la inserción de las paradas de autobuses en la base de datos.
+     */
     private void registrarParadas(){
         baseDatos.agregarParada(new Parada(22.751152,-102.666829,""));
         baseDatos.agregarParada(new Parada(22.761301,-102.670530,""));
@@ -507,6 +529,9 @@ public class MapActivityPresenter {
         baseDatos.agregarParada(new Parada(22.783089,-102.49616,""));
     }
 
+    /**
+     * Realiza la inserción de las rutas existentes en la base de datos.
+     */
     private void registrarRutas(){
         baseDatos.agregarRuta(new Ruta("Ruta 1","#02baed"));
         baseDatos.agregarRuta(new Ruta("Ruta 2 Zacatecas","#037b1a"));
@@ -525,10 +550,18 @@ public class MapActivityPresenter {
         baseDatos.agregarRuta(new Ruta("Transportes de Guadalupe Tierra y Libertad","#8e180e"));
     }
 
+    /**
+     * Realiza la inserción de la relación de una parada con una ruta en la base de datos.
+     * @param idParada Identificador de la parada.
+     * @param idRuta Identificador de la ruta.
+     */
     private void insertarParadaRuta(Integer idParada, Integer idRuta) {
         baseDatos.agregarParadaRuta(new Parada(idParada),new Ruta(idRuta));
     }
 
+    /**
+     * Solicita la inserción de la relación de una parada con una ruta en la base de datos.
+     */
     private void registrarParadaRutas() {
         insertarParadaRuta(1,1);
         insertarParadaRuta(2,1);
