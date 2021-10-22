@@ -11,12 +11,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.geeksoftware.basedatos.SQLiteDataBase;
 import com.geeksoftware.modelos.Parada;
 import com.geeksoftware.modelos.Ruta;
 import com.geeksoftware.presentadores.MapActivityPresenter;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,6 +29,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.geeksoftware.vistas.databinding.ActivityMapsBinding;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -33,6 +43,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,15 +54,67 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     /** Mapa de Google sobre el que se muestran las paradas de autobuses. */
     private GoogleMap mMap;
+    /** Vista del mapa */
+    private View mapView;
     private ActivityMapsBinding binding;
     /** Enlace de la vista con el procesamiento de la lógica de negocio y los datos. */
     private MapActivityPresenter presentador;
+
+    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presentador = new MapActivityPresenter(this);
         checkLocationPermission();
+
+        // Se obtiene el SupportMapFragment y se notifica cuando el mapa está
+        // listo para usarse.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapView = mapFragment.getView();
+        mapFragment.getMapAsync(this);
+
+        String apiKey = getResources().getString(R.string.google_maps_key);
+        // Initialize the SDK
+        Places.initialize(getApplicationContext(), apiKey);
+
+        // Create a new PlacesClient instance
+        PlacesClient placesClient = Places.createClient(this);
+
+
+        // Initialize the AutocompleteSupportFragment.
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        // Specify the types of place data to return.
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+
+        // Set up a PlaceSelectionListener to handle the response.
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                // TODO: Get info about the selected place.
+                Log.i("MSG", "Place: " + place.getName() + ", " + place.getId());
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+                // TODO: Handle the error.
+                Log.i("ERR", "An error occurred: " + status);
+            }
+        });
+
+
+        // Set the fields to specify which types of place data to
+        // return after the user has made a selection.
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+
+        // Start the autocomplete intent.
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                .build(this);
+        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+
     }
 
     /**
@@ -109,6 +172,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         presentador.cargarParadas();
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(MapActivity.this));
 
+        // Se posiciona el botón para buscar la localización del dispositivo
+        // en la esquina inferior derecha del mapa
+        if (mapView != null && mapView.findViewById(Integer.parseInt("1")) != null) {
+            // Get the button view
+            View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).
+                    getParent()).findViewById(Integer.parseInt("2"));
+            // and next place it, on bottom right (as Google Maps app)
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)
+                    locationButton.getLayoutParams();
+            // position on right bottom
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+            layoutParams.setMargins(0, 0, 30, 30);
+        }
+
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
@@ -150,14 +228,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void mostrarErrorParadas() {
-        Toast.makeText(this,"Ocurrió un error al mostrar las paradas de autobuses",
-                Toast.LENGTH_LONG).show();
+        mostrarMensaje("Ocurrió un error al mostrar las paradas de autobuses");
     }
 
     @Override
     public void mostrarErrorInfoParada() {
-        Toast.makeText(this,"Ocurrió un error al mostrar la información" +
-                " de la parada", Toast.LENGTH_LONG).show();
+        mostrarMensaje("Ocurrió un error al mostrar la información de la parada");
+    }
+
+    /**
+     * Crea y muestra un mensaje tipo Toast.
+     * @param mensaje Texto a incluir en el mensaje.
+     */
+    private void mostrarMensaje(String mensaje) {
+        Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
     }
 }
 
