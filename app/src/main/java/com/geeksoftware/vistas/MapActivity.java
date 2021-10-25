@@ -15,6 +15,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.geeksoftware.modelos.Parada;
@@ -229,6 +230,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void mostrarOpcionesDeRuta(List<Ruta> listaRutas) {
+        ScrollView scrollView = findViewById(R.id.scroll_view);
+        scrollView.setVisibility(View.VISIBLE);
+        System.out.println("\nOpciones de ruta:");
+        for(Ruta ruta : listaRutas) {
+            System.out.println("\n" + ruta.getNombre());
+        }
+    }
+
+    @Override
+    public void resaltarParadaSubida(Parada parada) {
+
+    }
+
+    @Override
+    public void resaltarParadaBajada(Parada parada) {
+
+    }
+
+    @Override
+    public void mostrarRecorridoRuta(List<Parada> puntos) {
+
+    }
+
+    @Override
+    public void marcarPunto(LatLng punto) {
 
     }
 

@@ -3,6 +3,7 @@ package com.geeksoftware.vistas;
 import com.geeksoftware.modelos.Parada;
 import com.geeksoftware.modelos.Ruta;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.List;
@@ -44,4 +45,12 @@ public interface MapActivityView {
      * @param listaRutas Rutas óptimas.
      */
     void mostrarOpcionesDeRuta(List<Ruta> listaRutas);
+
+    void resaltarParadaSubida(Parada parada);
+
+    void resaltarParadaBajada(Parada parada);
+
+    void mostrarRecorridoRuta(List<Parada> puntos);
+
+    void marcarPunto(LatLng punto);
 }

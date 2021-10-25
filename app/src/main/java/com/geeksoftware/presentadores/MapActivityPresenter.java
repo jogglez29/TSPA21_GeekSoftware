@@ -91,6 +91,18 @@ public class MapActivityPresenter {
         vista.mostrarOpcionesDeRuta(rutasOptimas);
     }
 
+    public void cargarParadaSubida(Ruta ruta, LatLng localizacion) {
+        vista.resaltarParadaSubida(null);
+    }
+
+    public void cargarParadaBajada(Ruta ruta, LatLng destino) {
+        vista.resaltarParadaBajada(null);
+    }
+
+    public void cargarRecorridoRuta(Ruta ruta) {
+        vista.mostrarRecorridoRuta(null);
+    }
+
     /**
      * Realiza la inserción de las paradas de autobuses en la base de datos.
      */

@@ -41,6 +41,7 @@ public class BuscadorParada {
             // Evaluación de la parada más cercana, de entre todas, al destino.
             if(distancia < menorDistancia) {
                 paradaMasCercana = parada;
+                menorDistancia = distancia;
             }
         }
 
@@ -48,7 +49,7 @@ public class BuscadorParada {
         if(paradasCercanas.size() > 0) {
             return paradasCercanas;
         } else {
-            // No se encontrón ninguna parada a 500 o menos metros del destino,
+            // No se encontrón ninguna parada a 800 o menos metros del destino,
             // se retorna la más cercana.
             paradasCercanas.add(paradaMasCercana);
             return paradasCercanas;
