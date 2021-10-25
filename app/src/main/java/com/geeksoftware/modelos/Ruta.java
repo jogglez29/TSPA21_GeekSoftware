@@ -1,5 +1,7 @@
 package com.geeksoftware.modelos;
 
+import androidx.annotation.Nullable;
+
 /**
  * Define la información que debe contener una ruta.
  */
@@ -94,5 +96,15 @@ public class Ruta {
      */
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        Ruta ruta = (Ruta) obj;
+        if(this.id.equals(ruta.getId())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

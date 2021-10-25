@@ -11,10 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <fragment android:id="@+id/autocomplete_fragment"
+    <fragment
+        android:id="@+id/autocomplete_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_round"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-        android:queryHint="Buscar destino..."/>
+    />
+
 </RelativeLayout>

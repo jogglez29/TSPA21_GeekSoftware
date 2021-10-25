@@ -6,9 +6,12 @@ import com.geeksoftware.basedatos.ConectorBaseDatos;
 import com.geeksoftware.basedatos.SQLiteDataBase;
 import com.geeksoftware.modelos.Parada;
 import com.geeksoftware.modelos.Ruta;
+import com.geeksoftware.utilidades.BuscadorParada;
 import com.geeksoftware.vistas.MapActivityView;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,6 +63,32 @@ public class MapActivityPresenter {
         } else {
             vista.mostrarErrorInfoParada();
         }
+    }
+
+    /**
+     * Encuentra las rutas más óptimas para llegar a la localización
+     * indicada.
+     * @param localizacion Coordenadas del lugar a llegar.
+     */
+    public void cargarOpcionesDeRuta(LatLng localizacion) {
+        // Se obtienen todas las paradas de la base de datos.
+        List<Parada> listaParadas = baseDatos.obtenerParadas();
+        // Se buscan las paradas cercanas al destino elegido.
+        List<Parada> paradasCercanas = BuscadorParada.
+                buscarParadasCercanas(localizacion, listaParadas);
+
+        List<Ruta> rutasOptimas = new ArrayList<>();
+        for(Parada parada : paradasCercanas) {
+            // Se buscan las rutas que pasan por cada parada cercana.
+            List<Ruta> rutasParada = baseDatos.obtenerRutasPorParada(parada.getId());
+            for(Ruta ruta : rutasParada) {
+                // Se agregan dichas rutas a la lista de rutas óptimas.
+                if(!rutasOptimas.contains(ruta)) {
+                    rutasOptimas.add(ruta);
+                }
+            }
+        }
+        vista.mostrarOpcionesDeRuta(rutasOptimas);
     }
 
     /**

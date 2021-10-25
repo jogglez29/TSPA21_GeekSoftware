@@ -7,6 +7,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -60,8 +61,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     /** Enlace de la vista con el procesamiento de la lógica de negocio y los datos. */
     private MapActivityPresenter presentador;
 
-    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +77,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         String apiKey = getResources().getString(R.string.google_maps_key);
         // Initialize the SDK
         Places.initialize(getApplicationContext(), apiKey);
-
         // Create a new PlacesClient instance
         PlacesClient placesClient = Places.createClient(this);
 
@@ -87,15 +85,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
+        autocompleteFragment.getView().setBackgroundColor(Color.WHITE);
+
+
         // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+        autocompleteFragment.setPlaceFields(Arrays.asList(
+                Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
 
         // Set up a PlaceSelectionListener to handle the response.
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
-                // TODO: Get info about the selected place.
-                Log.i("MSG", "Place: " + place.getName() + ", " + place.getId());
+                System.out.println("DESTINO:" +  place.getName());
+                presentador.cargarOpcionesDeRuta(place.getLatLng());
             }
 
             @Override
@@ -104,17 +106,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Log.i("ERR", "An error occurred: " + status);
             }
         });
-
-
-        // Set the fields to specify which types of place data to
-        // return after the user has made a selection.
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
-
-        // Start the autocomplete intent.
-        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
-                .build(this);
-        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
-
     }
 
     /**
@@ -234,6 +225,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void mostrarErrorInfoParada() {
         mostrarMensaje("Ocurrió un error al mostrar la información de la parada");
+    }
+
+    @Override
+    public void mostrarOpcionesDeRuta(List<Ruta> listaRutas) {
+
     }
 
     /**

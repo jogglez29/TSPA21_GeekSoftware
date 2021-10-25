@@ -37,4 +37,11 @@ public interface MapActivityView {
      * las rutas que se detienen en una parada.
      */
     void mostrarErrorInfoParada();
+
+    /**
+     * Muestra las rutas que pueden dejar al usuario cerca de
+     * su destino.
+     * @param listaRutas Rutas óptimas.
+     */
+    void mostrarOpcionesDeRuta(List<Ruta> listaRutas);
 }
