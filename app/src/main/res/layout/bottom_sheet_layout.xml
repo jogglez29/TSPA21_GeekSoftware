@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="15dp"
-        android:text="Seleccione una ruta"
+        android:padding="10dp"
+        android:text="@string/seleccione_una_ruta"
         android:textColor="@color/quantum_grey"
         android:textSize="25sp" />
 
@@ -24,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
+        android:paddingBottom="15dp"
         android:mode="oneLine" />
 
 </LinearLayout>

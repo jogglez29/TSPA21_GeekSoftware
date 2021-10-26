@@ -1,6 +1,7 @@
 package com.geeksoftware.vistas;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,15 +48,14 @@ public class BottomSheetListAdapter extends BaseAdapter {
         }
 
         // get current item to be displayed
-        Ruta currentItem = (Ruta) getItem(position);
+        Ruta ruta = (Ruta) getItem(position);
 
         // get the TextView for item name and item description
-        TextView textViewItemName = convertView.findViewById(R.id.text_view_item_name);
-//        TextView textViewItemDescription = (TextView)
-//                convertView.findViewById(R.id.text_view_item_description);
-
-        //sets the text for item name and item description from the current item object
-        textViewItemName.setText(currentItem.getNombre());
+        TextView txtViewNombreRuta = convertView.findViewById(R.id.text_view_nombre_ruta);
+        txtViewNombreRuta.setText(ruta.getNombre());
+        View viewColorRuta = (View) convertView.findViewById(R.id.view_color_ruta);
+        int color = Color.parseColor(ruta.getColor());
+        viewColorRuta.setBackgroundColor(color);
 
         // returns the view for the current row
         return convertView;
