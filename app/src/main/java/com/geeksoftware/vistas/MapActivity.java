@@ -13,7 +13,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -38,6 +41,7 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -230,12 +234,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void mostrarOpcionesDeRuta(List<Ruta> listaRutas) {
-        ScrollView scrollView = findViewById(R.id.scroll_view);
-        scrollView.setVisibility(View.VISIBLE);
-        System.out.println("\nOpciones de ruta:");
-        for(Ruta ruta : listaRutas) {
-            System.out.println("\n" + ruta.getNombre());
-        }
+
+        BottomSheetDialog dialog = new BottomSheetDialog(MapActivity.this);
+        dialog.setContentView(R.layout.bottom_sheet_layout);
+
+        BottomSheetListView listView = dialog.findViewById(R.id.listViewBtmSheet);
+        listView.setAdapter(new BottomSheetListAdapter(MapActivity.this, listaRutas));
+        dialog.show();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
+                System.out.println("RUTA ELEGIDA: " + rutaElegida.getNombre());
+                dialog.dismiss();
+            }
+        });
     }
 
     @Override
@@ -266,4 +280,3 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
     }
 }
-
