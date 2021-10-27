@@ -104,6 +104,19 @@ public class MapActivityPresenter {
     }
 
     /**
+     * Obtiene todas las rutas almacenadas en la base de datos.
+     */
+    public void cargarRutas() {
+        List<Ruta> listaRutas = new ArrayList<>();
+        // Se obtienen todas las rutas de la base de datos
+        listaRutas = baseDatos.obtenerRutas();
+        if(listaRutas != null) {
+            // No hubo problemas al obtener las rutas.
+            vista.mostrarRutas(listaRutas);
+        }
+    }
+
+    /**
      * Realiza la inserción de las paradas de autobuses en la base de datos.
      */
     private void registrarParadas(){

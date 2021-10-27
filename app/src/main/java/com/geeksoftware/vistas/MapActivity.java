@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -109,6 +110,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onError(@NonNull Status status) {
                 // TODO: Handle the error.
                 Log.i("ERR", "An error occurred: " + status);
+            }
+        });
+
+        // Se agrega el evento cuando se presiona el botón de Ver Rutas.
+        Button btnVerRutas = findViewById(R.id.ver_rutas);
+        btnVerRutas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presentador.cargarRutas();
             }
         });
     }
@@ -270,6 +280,27 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void marcarPunto(LatLng punto) {
 
+    }
+
+    @Override
+    public void mostrarRutas(List<Ruta> rutas) {
+        BottomSheetDialog dialog = new BottomSheetDialog(MapActivity.this);
+        dialog.setContentView(R.layout.bottom_sheet_layout);
+
+        BottomSheetListView listView = dialog.findViewById(R.id.listViewBtmSheet);
+        listView.setAdapter(new BottomSheetListAdapter(MapActivity.this, rutas));
+        dialog.show();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
+                System.out.println("RUTA ELEGIDA: " + rutaElegida.getNombre());
+                System.out.println("RECORRIDO RUTA");
+                // TODO Código para mostrar el recorrido de la ruta elegida.
+                dialog.dismiss();
+            }
+        });
     }
 
     /**

@@ -53,4 +53,10 @@ public interface MapActivityView {
     void mostrarRecorridoRuta(List<Parada> puntos);
 
     void marcarPunto(LatLng punto);
+
+    /**
+     * Muestra todas las rutas existentes en la base de datos.
+     * @param rutas Información de las rutas.
+     */
+    void mostrarRutas(List<Ruta> rutas);
 }
