@@ -171,16 +171,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // Se posiciona el botón para buscar la localización del dispositivo
         // en la esquina inferior derecha del mapa
         if (mapView != null && mapView.findViewById(Integer.parseInt("1")) != null) {
-            // Get the button view
+            // Se obtiene la View del botón
             View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).
                     getParent()).findViewById(Integer.parseInt("2"));
-            // and next place it, on bottom right (as Google Maps app)
+            // Ahora se posiciona en la parte inferior derecha del mapa.
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)
                     locationButton.getLayoutParams();
-            // position on right bottom
+            // Se definen los parámetros y márgenes para posicionar el botón.
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-            layoutParams.setMargins(0, 0, 30, 30);
+            layoutParams.setMargins(0, 0, 30, 200);
         }
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
