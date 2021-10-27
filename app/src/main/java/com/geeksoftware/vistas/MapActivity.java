@@ -28,6 +28,7 @@ import com.geeksoftware.presentadores.MapActivityPresenter;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -62,8 +63,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     /** Mapa de Google sobre el que se muestran las paradas de autobuses. */
     private GoogleMap mMap;
-    /** Vista del mapa */
-    private View mapView;
     private ActivityMapsBinding binding;
     /** Enlace de la vista con el procesamiento de la lógica de negocio y los datos. */
     private MapActivityPresenter presentador;
@@ -73,54 +72,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         presentador = new MapActivityPresenter(this);
         checkLocationPermission();
-
-        // Se obtiene el SupportMapFragment y se notifica cuando el mapa está
-        // listo para usarse.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapView = mapFragment.getView();
-        mapFragment.getMapAsync(this);
-
-        String apiKey = getResources().getString(R.string.google_maps_key);
-        // Initialize the SDK
-        Places.initialize(getApplicationContext(), apiKey);
-        // Create a new PlacesClient instance
-        PlacesClient placesClient = Places.createClient(this);
-
-
-        // Initialize the AutocompleteSupportFragment.
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-        autocompleteFragment.getView().setBackgroundColor(Color.WHITE);
-
-
-        // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(
-                Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
-        autocompleteFragment.setHint(getString(R.string.buscar_destino));
-
-        // Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(@NonNull Place place) {
-                presentador.cargarOpcionesDeRuta(place.getLatLng());
-            }
-
-            @Override
-            public void onError(@NonNull Status status) {
-                // TODO: Handle the error.
-                Log.i("ERR", "An error occurred: " + status);
-            }
-        });
-
-        // Se agrega el evento cuando se presiona el botón de Ver Rutas.
-        Button btnVerRutas = findViewById(R.id.ver_rutas);
-        btnVerRutas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presentador.cargarRutas();
-            }
-        });
     }
 
     /**
@@ -170,13 +121,94 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        // Se posiciona la cámara del mapa en la zona conurbada Zacatecas-Guadalupe.
         LatLng zacGpe = new LatLng(22.76424926, -102.5482729);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zacGpe,15.5f));
 
+        // Se habilita la opción en el mapa para que el usuario pueda visualizar
+        // su localización
         mMap.setMyLocationEnabled(true);
+        // Solicitud de todas las paradas de autobuses.
         presentador.cargarParadas();
+        // Asignación de una ventana personalizada cuando se selecciona
+        // una parada.
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(MapActivity.this));
+
+        // Se configura el autocompletador de lugares.
+        inicializarCompletadorLugares();
+        // Se define la nueva posición del botón para visualizar la localización
+        // del dispositivo
+        cambiarPosicionMiLocalizacion();
+
+        // Evento para cuando se selecciona una parada de autobus.
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker marker) {
+                String idParada = marker.getSnippet();
+                marker.setSnippet("");
+                presentador.cargarInfoParada(Integer.parseInt(idParada), marker);
+                marker.showInfoWindow();
+                marker.setSnippet(idParada);
+                return true;
+            }
+        });
+
+        // Evento para cuando se presiona el botón de Ver Rutas.
+        Button btnVerRutas = findViewById(R.id.ver_rutas);
+        btnVerRutas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presentador.cargarRutas();
+            }
+        });
+    }
+
+    /**
+     * Realiza la configuración inicial del cuadro de texto
+     * que autocompleta destinos en el mapa.
+     */
+    private void inicializarCompletadorLugares() {
+        String apiKey = getResources().getString(R.string.google_maps_key);
+        // Se inicializa el SDK
+        Places.initialize(getApplicationContext(), apiKey);
+        // Create a new PlacesClient instance
+        PlacesClient placesClient = Places.createClient(this);
+
+
+        // Inicialización del AutocompleteSupportFragment.
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteFragment.getView().setBackgroundColor(Color.WHITE);
+
+
+        // Especificación de los datos del lugar a regresar en cada consulta.
+        autocompleteFragment.setPlaceFields(Arrays.asList(
+                Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+        autocompleteFragment.setHint(getString(R.string.buscar_destino));
+
+        // Asignación de un PlaceSelectionListener para manejar las respuestas.
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                presentador.cargarOpcionesDeRuta(place.getLatLng());
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+                // TODO: Handle the error.
+                Log.i("ERR", "An error occurred: " + status);
+            }
+        });
+    }
+
+    /**
+     * Modifica la posición del botón para consultar la localización del dispositivo
+     * a la esquina inferior derecha del mapa.
+     */
+    private void cambiarPosicionMiLocalizacion() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        View mapView = mapFragment.getView();
 
         // Se posiciona el botón para buscar la localización del dispositivo
         // en la esquina inferior derecha del mapa
@@ -192,18 +224,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
             layoutParams.setMargins(0, 0, 30, 200);
         }
-
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(@NonNull Marker marker) {
-                String idParada = marker.getSnippet();
-                marker.setSnippet("");
-                presentador.cargarInfoParada(Integer.parseInt(idParada), marker);
-                marker.showInfoWindow();
-                marker.setSnippet(idParada);
-                return true;
-            }
-        });
     }
 
     @Override

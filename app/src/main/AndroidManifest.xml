@@ -49,6 +49,11 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
+        <service
+            android:name="MapActivity"
+            android:foregroundServiceType="location" >
+        </service>
+
     </application>
 
 </manifest>
