@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.geeksoftware.vistas.databinding.ActivityMapsBinding;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
@@ -89,19 +90,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // Initialize the AutocompleteSupportFragment.
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-
         autocompleteFragment.getView().setBackgroundColor(Color.WHITE);
 
 
         // Specify the types of place data to return.
         autocompleteFragment.setPlaceFields(Arrays.asList(
                 Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+        autocompleteFragment.setHint(getString(R.string.buscar_destino));
 
         // Set up a PlaceSelectionListener to handle the response.
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
-                System.out.println("DESTINO:" +  place.getName());
                 presentador.cargarOpcionesDeRuta(place.getLatLng());
             }
 
