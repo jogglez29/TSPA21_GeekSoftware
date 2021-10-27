@@ -1,6 +1,7 @@
 package com.geeksoftware.utilidades;
 
 import com.geeksoftware.modelos.Parada;
+import com.geeksoftware.modelos.Ruta;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -54,5 +55,30 @@ public class BuscadorParada {
             paradasCercanas.add(paradaMasCercana);
             return paradasCercanas;
         }
+    }
+
+    public static Parada buscarParadaCercana(LatLng localizacion, List<Parada> paradas){
+        // Guarda la parada más cercana al destino
+        Parada paradaCercana = new Parada();
+        Double distanciaMinima = Double.MAX_VALUE;
+
+        // Si la lista sólo contiene una parada, se regresa esta
+        if (paradas.size() == 1){
+            paradaCercana = paradas.get(0);
+            return paradaCercana;
+        }else{ // Si la lista contiene más de una parada se busca la más cercana por donde pase la ruta seleccionada
+            for (Parada parada : paradas){
+                // Cálculo de distancia en metros de una parada con el destino.
+                Double distancia = SphericalUtil.computeDistanceBetween(localizacion,
+                        new LatLng(parada.getLatitud(), parada.getLongitud()));
+                // Si la distancia es menor que la mínima registrada, ésta última se sustituye por la primera.
+                if (distancia < distanciaMinima){
+                    paradaCercana = parada;
+                    distanciaMinima = distancia;
+                }
+            }
+            return paradaCercana;
+        }
+
     }
 }
