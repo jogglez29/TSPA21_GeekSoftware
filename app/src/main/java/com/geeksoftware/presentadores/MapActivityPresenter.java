@@ -5,6 +5,7 @@ import android.content.Context;
 import com.geeksoftware.basedatos.ConectorBaseDatos;
 import com.geeksoftware.basedatos.SQLiteDataBase;
 import com.geeksoftware.modelos.Parada;
+import com.geeksoftware.modelos.PuntoRuta;
 import com.geeksoftware.modelos.Ruta;
 import com.geeksoftware.utilidades.BuscadorParada;
 import com.geeksoftware.vistas.MapActivityView;
@@ -38,6 +39,7 @@ public class MapActivityPresenter {
         registrarParadas();
         registrarRutas();
         registrarParadaRutas();
+        registrarPuntos();
     }
 
     /**
@@ -117,8 +119,15 @@ public class MapActivityPresenter {
         vista.resaltarParadaBajada(null);
     }
 
+    /**
+     * Muestra el recorrido de una ruta en el mapa.
+     * @param ruta La ruta de la cual se mostrara su recorrido.
+     */
     public void cargarRecorridoRuta(Ruta ruta) {
-        vista.mostrarRecorridoRuta(null);
+        List<PuntoRuta> puntos = baseDatos.obtenerPuntosRuta(ruta.getId());
+        if (puntos != null){
+            vista.mostrarRecorridoRuta(puntos,ruta);
+        }
     }
 
     /**
@@ -1326,5 +1335,18 @@ public class MapActivityPresenter {
         insertarParadaRuta(459,11);
         insertarParadaRuta(460,11);
         insertarParadaRuta(461,12);
+    }
+
+    /**
+     * Realiza la inserción de los puntos de las rutas en la base de datos.
+     */
+    private void registrarPuntos(){
+        baseDatos.agregarPuntoRuta(new PuntoRuta(1,new Ruta(13),22.745360, -102.670542));
+        baseDatos.agregarPuntoRuta(new PuntoRuta(2,new Ruta(13),22.751821, -102.666562));
+        baseDatos.agregarPuntoRuta(new PuntoRuta(3,new Ruta(13),22.752444, -102.666133));
+        baseDatos.agregarPuntoRuta(new PuntoRuta(4,new Ruta(13),22.757332, -102.662099));
+        baseDatos.agregarPuntoRuta(new PuntoRuta(5,new Ruta(13),22.757777, -102.661605));
+        baseDatos.agregarPuntoRuta(new PuntoRuta(6,new Ruta(13),22.758126, -102.660872));
+        baseDatos.agregarPuntoRuta(new PuntoRuta(7,new Ruta(13),22.758754, -102.658018));
     }
 }

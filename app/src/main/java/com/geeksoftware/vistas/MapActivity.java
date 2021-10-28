@@ -13,22 +13,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.geeksoftware.modelos.Parada;
+import com.geeksoftware.modelos.PuntoRuta;
 import com.geeksoftware.modelos.Ruta;
 import com.geeksoftware.presentadores.MapActivityPresenter;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -36,14 +33,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.geeksoftware.vistas.databinding.ActivityMapsBinding;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -52,6 +48,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -293,8 +290,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void mostrarRecorridoRuta(List<Parada> puntos) {
-
+    public void mostrarRecorridoRuta(List<PuntoRuta> puntos, Ruta ruta) {
+        Polyline recorridoRuta = mMap.addPolyline(new PolylineOptions().color(Color.parseColor(ruta.getColor())).geodesic(true));
+        List<LatLng>puntosRuta = new ArrayList<>();
+        for (int i=0; i<puntos.size();i++){
+            puntosRuta.add(new LatLng(puntos.get(i).getLatitud(),puntos.get(i).getLongitud()));
+        }
+        recorridoRuta.setPoints(puntosRuta);
     }
 
     @Override
@@ -317,7 +319,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
                 System.out.println("RUTA ELEGIDA: " + rutaElegida.getNombre());
                 System.out.println("RECORRIDO RUTA");
-                // TODO Código para mostrar el recorrido de la ruta elegida.
+                presentador.cargarRecorridoRuta(rutaElegida);
                 dialog.dismiss();
             }
         });

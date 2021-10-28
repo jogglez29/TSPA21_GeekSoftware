@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.geeksoftware.modelos.Parada;
 import com.geeksoftware.modelos.ParadaRuta;
+import com.geeksoftware.modelos.PuntoRuta;
 import com.geeksoftware.modelos.Ruta;
 
 import java.util.ArrayList;
@@ -52,6 +53,18 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
     /** Nombre de la segunda columna de la tabla paradas_rutas. */
     public static final String PARADA_RUTA_COL_ID_RUTA = "ID_RUTA";
 
+                    /** Tabla PARADAS_RUTAS */
+    /** Nombre de la tabla que establece relaciones entre paradas y rutas. */
+    public static final String TABLA_PUNTOS_RUTA = "puntos_ruta";
+    /** Nombre de la primer columna de la tabla puntos_ruta. */
+    public static final String PUNTOS_RUTA_COL_ID = "ID";
+    /** Nombre de la segunda columna de la tabla puntos_ruta. */
+    public static final String PUNTOS_RUTA_COL_ID_RUTA = "ID_RUTA";
+    /** Nombre de la tercera columna de la tabla puntos_ruta.  */
+    public static final String PUNTOS_RUTA_COL_LAT = "LATITUD";
+    /** Nombre de la cuarta columna de la tabla puntos_ruta.  */
+    public static final String PUNTOS_RUTA_COL_LONG = "LONGITUD";
+
     /**
      * Define el constructor de la clase.
      * @param context Contexto a utilizarse
@@ -65,6 +78,7 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
         sqLiteDatabase.execSQL("create table " + TABLA_PARADA + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, DESCRIPCION TEXT, LATITUD REAL, LONGITUD REAL, UNIQUE(LATITUD,LONGITUD))");
         sqLiteDatabase.execSQL("create table " + TABLA_RUTA + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, NOMBRE TEXT UNIQUE, COLOR TEXT DEFAULT '#ffffff')");
         sqLiteDatabase.execSQL("create table " + TABLA_PARADA_RUTA + "(ID_PARADA INTEGER, ID_RUTA INTEGER, FOREIGN KEY(ID_PARADA) REFERENCES PARADA(ID), FOREIGN KEY(ID_RUTA) REFERENCES RUTA(ID), PRIMARY KEY(ID_PARADA, ID_RUTA))");
+        sqLiteDatabase.execSQL("create table " + TABLA_PUNTOS_RUTA + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, ID_RUTA INTEGER, LATITUD REAL, LONGITUD REAL, FOREIGN KEY(ID_RUTA) REFERENCES RUTA(ID), UNIQUE(LATITUD,LONGITUD))");
     }
 
     @Override
@@ -72,6 +86,7 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_PARADA_RUTA);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_PARADA);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_RUTA);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_PUNTOS_RUTA);
         onCreate(sqLiteDatabase);
     }
 
@@ -109,6 +124,20 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
         contentValues.put(PARADA_RUTA_COL_ID_PAR, parada.getId());
         contentValues.put(PARADA_RUTA_COL_ID_RUTA, ruta.getId());
         long result = sqLiteDatabase.insert(TABLA_PARADA_RUTA, null, contentValues);
+        if (result == -1)
+            return false;
+        else
+            return true;
+    }
+
+    @Override
+    public boolean agregarPuntoRuta(PuntoRuta punto) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PUNTOS_RUTA_COL_ID_RUTA, punto.getIdRuta());
+        contentValues.put(PUNTOS_RUTA_COL_LAT, punto.getLatitud());
+        contentValues.put(PUNTOS_RUTA_COL_LONG, punto.getLongitud());
+        long result = sqLiteDatabase.insert(TABLA_PUNTOS_RUTA, null, contentValues);
         if (result == -1)
             return false;
         else
@@ -190,6 +219,26 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
                 listaRutasPorParada.add(new Ruta(idRuta, nombre, color));
             }
             return listaRutasPorParada;
+
+        } catch (SQLiteException ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<PuntoRuta> obtenerPuntosRuta(Integer idRuta) {
+        try {
+            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery("SELECT * FROM " +TABLA_PUNTOS_RUTA+ " WHERE id_ruta = " +  idRuta, null);
+            List<PuntoRuta> listaPuntosRuta = new ArrayList<>();
+
+            while (res.moveToNext()) {
+                Integer id = res.getInt(0);
+                Double latitud = res.getDouble(2);
+                Double longitud = res.getDouble(3);
+                listaPuntosRuta.add(new PuntoRuta(id,new Ruta(idRuta),latitud,longitud));
+            }
+            return listaPuntosRuta;
 
         } catch (SQLiteException ex) {
             return null;

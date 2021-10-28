@@ -1,8 +1,8 @@
 package com.geeksoftware.vistas;
 
 import com.geeksoftware.modelos.Parada;
+import com.geeksoftware.modelos.PuntoRuta;
 import com.geeksoftware.modelos.Ruta;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
@@ -50,7 +50,7 @@ public interface MapActivityView {
 
     void resaltarParadaBajada(Parada parada);
 
-    void mostrarRecorridoRuta(List<Parada> puntos);
+    void mostrarRecorridoRuta(List<PuntoRuta> puntos, Ruta ruta);
 
     void marcarPunto(LatLng punto);
 

@@ -2,6 +2,7 @@ package com.geeksoftware.basedatos;
 
 import com.geeksoftware.modelos.Parada;
 import com.geeksoftware.modelos.ParadaRuta;
+import com.geeksoftware.modelos.PuntoRuta;
 import com.geeksoftware.modelos.Ruta;
 
 import java.util.List;
@@ -38,6 +39,15 @@ public interface ConectorBaseDatos {
     boolean agregarParadaRuta(Parada parada, Ruta ruta);
 
     /**
+     * Añade a la base de datos un registro de los puntos
+     * por los que pasa una ruta.
+     * @param punto Información del punto a registrar.
+     * @return Regresa <b>true</b> en caso de haber registrado
+     * el dato exitosamente, o <b>false</b> en caso contrario.
+     */
+    boolean agregarPuntoRuta(PuntoRuta punto);
+
+    /**
      * Consulta todas las rutas que existen en la base de datos.
      * @return Regresa una lista con las rutas obtenidas o null
      * en caso de haber ocurrido un error.
@@ -67,4 +77,12 @@ public interface ConectorBaseDatos {
      * o null en caso de haber ocurrido un error.
      */
     List<ParadaRuta> obtenerParadasRutas();
+
+    /**
+     * Consulta la información de los puntos por los que pasa una ruta.
+     * @param idRuta Identificador de la ruta.
+     * @return Regresa una lista con la información de los puntos
+     * obtenidas o null en caso de haber ocurrido un error.
+     */
+    List<PuntoRuta> obtenerPuntosRuta(Integer idRuta);
 }
