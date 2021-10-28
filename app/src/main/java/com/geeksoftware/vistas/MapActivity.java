@@ -63,6 +63,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ActivityMapsBinding binding;
     /** Enlace de la vista con el procesamiento de la lógica de negocio y los datos. */
     private MapActivityPresenter presentador;
+    /** Polyline que se encarga de mostrar el recorrido de cada ruta. */
+    private Polyline recorridoRuta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +120,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        recorridoRuta = mMap.addPolyline(new PolylineOptions());
+        recorridoRuta.remove();
         // Se posiciona la cámara del mapa en la zona conurbada Zacatecas-Guadalupe.
         LatLng zacGpe = new LatLng(22.76424926, -102.5482729);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zacGpe,15.5f));
@@ -272,8 +276,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                recorridoRuta.remove();
                 Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
                 System.out.println("RUTA ELEGIDA: " + rutaElegida.getNombre());
+                presentador.cargarRecorridoRuta(rutaElegida);
                 dialog.dismiss();
             }
         });
@@ -291,7 +297,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void mostrarRecorridoRuta(List<PuntoRuta> puntos, Ruta ruta) {
-        Polyline recorridoRuta = mMap.addPolyline(new PolylineOptions().color(Color.parseColor(ruta.getColor())).geodesic(true));
+        recorridoRuta = mMap.addPolyline(new PolylineOptions().color(Color.parseColor(ruta.getColor())).geodesic(true));
         List<LatLng>puntosRuta = new ArrayList<>();
         for (int i=0; i<puntos.size();i++){
             puntosRuta.add(new LatLng(puntos.get(i).getLatitud(),puntos.get(i).getLongitud()));
@@ -316,6 +322,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                recorridoRuta.remove();
                 Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
                 System.out.println("RUTA ELEGIDA: " + rutaElegida.getNombre());
                 System.out.println("RECORRIDO RUTA");
