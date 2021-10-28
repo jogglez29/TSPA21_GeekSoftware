@@ -57,6 +57,11 @@ public class BuscadorParada {
         }
     }
 
+    /**
+     * Encuentra la parada de autobús más cercana a una ubicación en formato LatLng
+     * @param paradas Lista de paradas donde se buscará la más cercana al destino.
+     * @param localizacion Ubicación a partir de la cual se buscará la parada más cercana.
+     * **/
     public static Parada buscarParadaCercana(LatLng localizacion, List<Parada> paradas){
         // Guarda la parada más cercana al destino
         Parada paradaCercana = new Parada();

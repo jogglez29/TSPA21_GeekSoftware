@@ -28,7 +28,10 @@ public class MapActivityPresenter {
     private ConectorBaseDatos baseDatos;
     /** Lista de paradas cercanas a un destino **/
     private List<Parada> paradasCercanas;
-
+    /** Localización del destino **/
+    private LatLng ubicacionDestino;
+    /** Parad de bajada con base en una ruta **/
+    private Parada paradaBajada;
     /**
      * Define el constructor del presentador.
      * @param vista Interfaz de usuario a ser enlazada con el presentador.
@@ -75,6 +78,8 @@ public class MapActivityPresenter {
      * @param localizacion Coordenadas del lugar a llegar.
      */
     public void cargarOpcionesDeRuta(LatLng localizacion) {
+        // Inicializar la ubicación de destino
+        ubicacionDestino = localizacion;
         // Se obtienen todas las paradas de la base de datos.
         List<Parada> listaParadas = baseDatos.obtenerParadas();
         // Se buscan las paradas cercanas al destino elegido.
@@ -98,13 +103,14 @@ public class MapActivityPresenter {
     public void cargarParadaSubida(Ruta ruta, LatLng localizacion) { vista.resaltarParadaSubida(null);
     }
 
-    public void cargarParadaBajada(Ruta ruta, LatLng destino) {
-        // Obtener el id de la ruta cuya parada más cercana se va a buscar
-        Integer idRuta = ruta.getId();
+    /**
+     * Encuentra la parada en la que el usuario debería bajar con base en una ruta seleccionada, a
+     * fin de llegar a su destino en el menor tiempo posible.
+     * @param ruta Ruta seleccionada por el usuario.
+     * **/
+    public void cargarParadaBajada(Ruta ruta) {
         // Paradas cercanas por donde pasa la ruta deseada
         List<Parada> paradasPreliminares = new ArrayList<>();
-        // Parada más cercana al destino discriminada por ruta
-        Parada paradaMasCercana = new Parada();
         // Buscar la parada más cercana por la que pasa esa ruta entre las paradas cercanas
         for (Parada parada : paradasCercanas){
             // Saber qué rutas pasan por esa parada
@@ -115,8 +121,8 @@ public class MapActivityPresenter {
             }
         }
         // Buscar parada más cercana al destino
-        paradaMasCercana = BuscadorParada.buscarParadaCercana(destino, paradasPreliminares);
-        vista.resaltarParadaBajada(null);
+        paradaBajada = BuscadorParada.buscarParadaCercana(ubicacionDestino, paradasPreliminares);
+        vista.resaltarParadaBajada(paradaBajada);
     }
 
     /**

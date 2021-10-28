@@ -65,7 +65,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MapActivityPresenter presentador;
     /** Polyline que se encarga de mostrar el recorrido de cada ruta. */
     private Polyline recorridoRuta;
-
+    /** En esta lista se guardarán todos los marcadores para fácil acceso **/
+    private List<Marker> markers;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -229,6 +230,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void mostrarParadas(List<Parada> listaParadas) {
+        markers = new ArrayList<>();
         for(Parada parada : listaParadas) {
             int height = 128;
             int width = 128;
@@ -236,10 +238,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Bitmap b = bitmapdraw.getBitmap();
             Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
             LatLng ubicacionParada = new LatLng(parada.getLatitud(), parada.getLongitud());
-            mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
+            Marker marker = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
                     .position(ubicacionParada)
-                    .title("Por aquí pasa"))
-                    .setSnippet(String.valueOf(parada.getId()));
+                    .title("Por aquí pasa"));
+                    //.setSnippet(String.valueOf(parada.getId()));
+            markers.add(marker);
+            marker.setSnippet(String.valueOf(parada.getId()));
         }
     }
 
@@ -279,6 +283,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 recorridoRuta.remove();
                 Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
                 System.out.println("RUTA ELEGIDA: " + rutaElegida.getNombre());
+                presentador.cargarParadaBajada(rutaElegida);
                 presentador.cargarRecorridoRuta(rutaElegida);
                 dialog.dismiss();
             }
@@ -292,7 +297,28 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void resaltarParadaBajada(Parada parada) {
-
+        // Se genera un objeto Latlng a partir de la parada de bajada.
+        LatLng posicionParadaBajada = new LatLng(parada.getLatitud(), parada.getLongitud());
+        // Se recorre la lista de marcadores
+        for(Marker marker : markers){
+            // Si se encuentra la parada de bajada en la lista
+            if (marker.getPosition().toString().equals(posicionParadaBajada.toString())){
+                // Backup del ID de la parada. ¡¡Hacer esto es importante!!
+                String idParada = marker.getSnippet();
+                String titulo = marker.getTitle();
+                // Se crea el mensaje de alerta para la bajada
+                marker.setTitle("¡Bajan!");
+                marker.setSnippet("Te recomendamos bajar aquí");
+                // Se muestra la ventana de información
+                marker.showInfoWindow();
+                // Se restaura el título del snippet
+                marker.setTitle(titulo);
+                // Se restaura el id de la parada en el marcador
+                marker.setSnippet(idParada);
+                // Hacer focus en la parada de bajada
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(posicionParadaBajada, 17f));
+            }
+        }
     }
 
     @Override
