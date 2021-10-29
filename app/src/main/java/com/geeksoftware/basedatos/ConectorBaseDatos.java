@@ -62,6 +62,15 @@ public interface ConectorBaseDatos {
     List<Parada> obtenerParadas();
 
     /**
+     * Consulta las paradas existentes en la base de datos correspondientes
+     * a una ruta en especifico.
+     * @param idRuta Identificador de la ruta de la cual se obtendran sus paradas.
+     * @return Regresa una lista con la información de las paradas
+     * obtenidas o null en caso de haber ocurrido un error.
+     */
+    List<Parada> obtenerParadasRuta(Integer idRuta);
+
+    /**
      * Consulta la información de las rutas que se detienen en una
      * determinada parada.
      * @param idParada Identificador de la parada a consultar.

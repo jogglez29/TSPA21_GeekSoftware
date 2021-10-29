@@ -81,6 +81,18 @@ public class MapActivityPresenter {
     }
 
     /**
+     * Extrae de la base de datos las paradas de autobuses correspondientes a una ruta.
+     */
+    public void cargarParadasRuta(Integer idRuta) {
+        List<Parada> listaParadas = baseDatos.obtenerParadasRuta(idRuta);
+        if(listaParadas != null) {
+            vista.mostrarParadas(listaParadas);
+        } else {
+            vista.mostrarErrorParadas();
+        }
+    }
+
+    /**
      * Extrae la información de las rutas que se detienen en una determinada parada de autobus.
      * @param idParada Identificador de la parada a consultar sus rutas.
      * @param marcador Punto del mapa donde se mostrará la información de las rutas

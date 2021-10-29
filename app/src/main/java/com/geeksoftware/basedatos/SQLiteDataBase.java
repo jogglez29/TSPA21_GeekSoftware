@@ -186,6 +186,28 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
     }
 
     @Override
+    public List<Parada> obtenerParadasRuta(Integer idRuta) {
+        try {
+            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery("select * from parada p" + " JOIN parada_rutas pr "
+                    + " ON pr.id_parada = p.id WHERE pr.id_ruta =" +  idRuta, null);
+            List<Parada> listaParadasRuta = new ArrayList<>();
+
+            while (res.moveToNext()) {
+                Integer id = res.getInt(0);
+                String descripcion = res.getString(1);
+                Double latitud = res.getDouble(2);
+                Double longitud = res.getDouble(3);
+                listaParadasRuta.add(new Parada(id, latitud, longitud, descripcion));
+            }
+            return listaParadasRuta;
+
+        } catch (SQLiteException ex) {
+            return null;
+        }
+    }
+
+    @Override
     public List<ParadaRuta> obtenerParadasRutas() {
         try {
             SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();

@@ -315,9 +315,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 recorridoRuta.remove();
                 Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
                 System.out.println("RUTA ELEGIDA: " + rutaElegida.getNombre());
+                presentador.cargarRecorridoRuta(rutaElegida);
                 presentador.cargarParadaSubida(rutaElegida, ubicacionActual);
                 presentador.cargarParadaBajada(rutaElegida);
-                presentador.cargarRecorridoRuta(rutaElegida);
                 dialog.dismiss();
             }
         });
@@ -391,6 +391,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void mostrarRecorridoRuta(List<PuntoRuta> puntos, Ruta ruta) {
+        mMap.clear();
+        presentador.cargarParadasRuta(ruta.getId());
         recorridoRuta = mMap.addPolyline(new PolylineOptions().color(Color.parseColor(ruta.getColor())).geodesic(true));
         List<LatLng>puntosRuta = new ArrayList<>();
         for (int i=0; i<puntos.size();i++){
