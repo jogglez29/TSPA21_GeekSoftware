@@ -314,7 +314,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 recorridoRuta.remove();
                 Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
-                System.out.println("RUTA ELEGIDA: " + rutaElegida.getNombre());
                 presentador.cargarRecorridoRuta(rutaElegida);
                 presentador.cargarParadaSubida(rutaElegida, ubicacionActual);
                 presentador.cargarParadaBajada(rutaElegida);
@@ -420,8 +419,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 recorridoRuta.remove();
                 Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
-                System.out.println("RUTA ELEGIDA: " + rutaElegida.getNombre());
-                System.out.println("RECORRIDO RUTA");
                 presentador.cargarRecorridoRuta(rutaElegida);
                 dialog.dismiss();
             }
