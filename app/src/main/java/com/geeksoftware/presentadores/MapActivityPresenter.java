@@ -763,7 +763,6 @@ public class MapActivityPresenter {
 
         insertarParadaRuta(25,8);
         insertarParadaRuta(26,14);
-        insertarParadaRuta(26,14);
         insertarParadaRuta(27,10);
         insertarParadaRuta(28,10);
         insertarParadaRuta(29,10);
@@ -1048,7 +1047,6 @@ public class MapActivityPresenter {
         insertarParadaRuta(212,12);
         insertarParadaRuta(212,13);
         insertarParadaRuta(212,14);
-        insertarParadaRuta(212,15);
         insertarParadaRuta(213,4);
         insertarParadaRuta(213,10);
         insertarParadaRuta(213,12);
@@ -1352,7 +1350,6 @@ public class MapActivityPresenter {
         insertarParadaRuta(417,12);
         insertarParadaRuta(418,12);
         insertarParadaRuta(419,7);
-        insertarParadaRuta(419,7);
         insertarParadaRuta(420,7);
         insertarParadaRuta(420,12);
         insertarParadaRuta(421,12);
@@ -1401,6 +1398,37 @@ public class MapActivityPresenter {
         insertarParadaRuta(459,11);
         insertarParadaRuta(460,11);
         insertarParadaRuta(461,12);
+
+        insertarParadaRuta(24,15);
+        insertarParadaRuta(23,15);
+        insertarParadaRuta(15,15);
+        insertarParadaRuta(18,15);
+        insertarParadaRuta(17,15);
+        insertarParadaRuta(20,15);
+        insertarParadaRuta(19,15);
+        insertarParadaRuta(21,15);
+        insertarParadaRuta(22,15);
+        insertarParadaRuta(14,15);
+        insertarParadaRuta(26,15);
+        insertarParadaRuta(62,15);
+        insertarParadaRuta(61,15);
+        insertarParadaRuta(60,15);
+        insertarParadaRuta(58,15);
+        insertarParadaRuta(172,15);
+        insertarParadaRuta(176,15);
+        insertarParadaRuta(192,15);
+        insertarParadaRuta(195,15);
+        insertarParadaRuta(197,15);
+        insertarParadaRuta(204,15);
+        insertarParadaRuta(205,15);
+        insertarParadaRuta(208,15);
+        insertarParadaRuta(212,15);
+        insertarParadaRuta(214,15);
+        insertarParadaRuta(243,15);
+        insertarParadaRuta(245,15);
+        insertarParadaRuta(288,15);
+        insertarParadaRuta(276,15);
+        insertarParadaRuta(291,15);
     }
 
     private void insertarPuntos(Integer idRuta, Double latitud, Double longitud){
