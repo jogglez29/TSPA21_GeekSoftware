@@ -2,13 +2,16 @@ package com.geeksoftware.vistas;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -24,6 +27,8 @@ import com.geeksoftware.modelos.PuntoRuta;
 import com.geeksoftware.modelos.Ruta;
 import com.geeksoftware.presentadores.MapActivityPresenter;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -35,6 +40,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.geeksoftware.vistas.databinding.ActivityMapsBinding;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -70,6 +76,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private List<Marker> markers;
     /** ID de la parada bajar **/
     private LatLng paradaBajada;
+    /** ID de la parada subida **/
+    private LatLng paradaSubida;
+    /** Se guarda la posición actual **/
+    private LatLng ubicacionActual;
+    /** TEMP **/
+    private FusedLocationProviderClient client;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +107,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
                 mapFragment.getMapAsync(MapActivity.this);
+
+                //Se obtienen las coordenadas actuales del usuario.
+                client = LocationServices.getFusedLocationProviderClient(MapActivity.this);
+
+                if (ActivityCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                client.getLastLocation().addOnSuccessListener(MapActivity.this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            ubicacionActual = new LatLng(location.getLatitude(), location.getLongitude());
+                        }
+                    }
+                });
             }
 
             @Override
@@ -286,6 +315,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 recorridoRuta.remove();
                 Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
                 System.out.println("RUTA ELEGIDA: " + rutaElegida.getNombre());
+                presentador.cargarParadaSubida(rutaElegida, ubicacionActual);
                 presentador.cargarParadaBajada(rutaElegida);
                 presentador.cargarRecorridoRuta(rutaElegida);
                 dialog.dismiss();
@@ -295,7 +325,35 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void resaltarParadaSubida(Parada parada) {
+        // Cargar el ícono que indica la parada de subida
+        int height = 192;
+        int width = 256;
+        BitmapDrawable bitmapdraw = (BitmapDrawable)getDrawable(R.drawable.ic_parada_subida);
+        Bitmap b = bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+        // Se genera un objeto Latlng a partir de la parada de subida.
+        LatLng posicionParadaSubida = new LatLng(parada.getLatitud(), parada.getLongitud());
 
+        // Se recorre la lista de marcadores
+        for(Marker marker : markers){
+            // Si ya hay una parada de subida registrada y la posición del marcador actual coincide
+            // con la posición de la parada de subida registrada.
+            if (paradaSubida != null && marker.getPosition().toString().equals(paradaSubida.toString())){
+                // Se restaura el icono de la parada
+                BitmapDrawable bitmapdraw2 = (BitmapDrawable)getDrawable(R.drawable.ic_autobus);
+                Bitmap b2 = bitmapdraw2.getBitmap();
+                Bitmap smallMarker2 = Bitmap.createScaledBitmap(b2, 128, 128, false);
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker2));
+            }
+            // Si se encuentra la nueva parada de subida en la lista
+            if (marker.getPosition().toString().equals(posicionParadaSubida.toString())){
+                // Se cambia el ícono de la parada para indicar que hay que subir ahí.
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(posicionParadaSubida, 17f));
+            }
+        }
+        // Se define la localización de la parada de bajada actualmente seleccionada.
+        paradaSubida = posicionParadaSubida;
     }
 
     @Override
@@ -324,7 +382,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             if (marker.getPosition().toString().equals(posicionParadaBajada.toString())){
                 // Se cambia el ícono de la parada para indicar que hay que bajar ahí.
                 marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(posicionParadaBajada, 17f));
+                //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(posicionParadaBajada, 17f));
             }
         }
         // Se define la localización de la parada de bajada actualmente seleccionada.

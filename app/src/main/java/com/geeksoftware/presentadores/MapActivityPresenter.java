@@ -28,10 +28,17 @@ public class MapActivityPresenter {
     private ConectorBaseDatos baseDatos;
     /** Lista de paradas cercanas a un destino **/
     private List<Parada> paradasCercanas;
+    /** Lista de paradas cercanas a mi ubicación **/
+    private List<Parada> paradasUbicacion;
     /** Localización del destino **/
     private LatLng ubicacionDestino;
+    /** Localización actual del usuario **/
+    private LatLng ubicacionActual;
     /** Parad de bajada con base en una ruta **/
     private Parada paradaBajada;
+    /** Parada de subida con base en una ruta **/
+    private Parada paradaSubida;
+
     /**
      * Define el constructor del presentador.
      * @param vista Interfaz de usuario a ser enlazada con el presentador.
@@ -102,7 +109,32 @@ public class MapActivityPresenter {
         vista.mostrarOpcionesDeRuta(rutasOptimas);
     }
 
-    public void cargarParadaSubida(Ruta ruta, LatLng localizacion) { vista.resaltarParadaSubida(null);
+    /**
+     * Encuentra la parada en la que el usuario debería subir con base en una ruta seleccionada.
+     * @param ruta Ruta seleccionada por el usuario.
+     * @param localizacion Localización actual del usuario.
+     * **/
+    public void cargarParadaSubida(Ruta ruta, LatLng localizacion) {
+        //Ubicación actual del usuario
+        ubicacionActual = localizacion;
+
+        // Se obtienen todas las paradas de la base de datos.
+        List<Parada> paradasUbicacion = baseDatos.obtenerParadas();
+
+        // Paradas cercanas por donde pasa la ruta deseada
+        List<Parada> paradasPreliminares = new ArrayList<>();
+        // Buscar la parada más cercana por la que pasa esa ruta entre las paradas cercanas
+        for (Parada parada : paradasUbicacion){
+            // Saber qué rutas pasan por esa parada
+            List<Ruta> rutasParada = baseDatos.obtenerRutasPorParada(parada.getId());
+            // Si la ruta deseada pasa por esa parada se selecciona la parada como candidato a parada más cercana
+            if (rutasParada.contains(ruta)){
+                paradasPreliminares.add(parada);
+            }
+        }
+        // Buscar parada más cercana al destino
+        paradaSubida = BuscadorParada.buscarParadaCercana(ubicacionActual, paradasPreliminares);
+        vista.resaltarParadaSubida(paradaSubida);
     }
 
     /**
