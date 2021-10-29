@@ -41,6 +41,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.maps.android.ui.IconGenerator;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -67,6 +68,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Polyline recorridoRuta;
     /** En esta lista se guardarán todos los marcadores para fácil acceso **/
     private List<Marker> markers;
+    /** ID de la parada bajar **/
+    private LatLng paradaBajada;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -297,28 +300,35 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void resaltarParadaBajada(Parada parada) {
+        // Cargar el ícono que indica la parada de bajada
+        int height = 192;
+        int width = 256;
+        BitmapDrawable bitmapdraw = (BitmapDrawable)getDrawable(R.drawable.ic_parada_bajada);
+        Bitmap b = bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
         // Se genera un objeto Latlng a partir de la parada de bajada.
         LatLng posicionParadaBajada = new LatLng(parada.getLatitud(), parada.getLongitud());
+
         // Se recorre la lista de marcadores
         for(Marker marker : markers){
-            // Si se encuentra la parada de bajada en la lista
+            // Si ya hay una parada de bajada registrada y la posición del marcador actual coincide
+            // con la posición de la parada de bajada registrada.
+            if (paradaBajada != null && marker.getPosition().toString().equals(paradaBajada.toString())){
+                // Se restaura el icono de la parada
+                BitmapDrawable bitmapdraw2 = (BitmapDrawable)getDrawable(R.drawable.ic_autobus);
+                Bitmap b2 = bitmapdraw2.getBitmap();
+                Bitmap smallMarker2 = Bitmap.createScaledBitmap(b2, 128, 128, false);
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker2));
+            }
+            // Si se encuentra la nueva parada de bajada en la lista
             if (marker.getPosition().toString().equals(posicionParadaBajada.toString())){
-                // Backup del ID de la parada. ¡¡Hacer esto es importante!!
-                String idParada = marker.getSnippet();
-                String titulo = marker.getTitle();
-                // Se crea el mensaje de alerta para la bajada
-                marker.setTitle("¡Bajan!");
-                marker.setSnippet("Te recomendamos bajar aquí");
-                // Se muestra la ventana de información
-                marker.showInfoWindow();
-                // Se restaura el título del snippet
-                marker.setTitle(titulo);
-                // Se restaura el id de la parada en el marcador
-                marker.setSnippet(idParada);
-                // Hacer focus en la parada de bajada
+                // Se cambia el ícono de la parada para indicar que hay que bajar ahí.
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(posicionParadaBajada, 17f));
             }
         }
+        // Se define la localización de la parada de bajada actualmente seleccionada.
+        paradaBajada = posicionParadaBajada;
     }
 
     @Override
