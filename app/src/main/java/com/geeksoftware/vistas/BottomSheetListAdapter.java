@@ -12,16 +12,29 @@ import com.geeksoftware.modelos.Ruta;
 
 import java.util.List;
 
-
+/**
+ * Define la forma de almacenamiento y extracción de datos que tendrán
+ * una lista de rutas.
+ */
 public class BottomSheetListAdapter extends BaseAdapter {
 
+    /** Guarda el contexto que hace uso del adaptador. */
     private Context context;
-    private List<Ruta> items;
+    /** Guarda los elementos de la lista. */
+    private List<?> items;
+    /** Guarda el layout a utilizar cuando la lista se vaya a mostrar. */
+    private int layout;
 
-    //public constructor
-    public BottomSheetListAdapter(Context context, List<Ruta> items) {
+    /**
+     * Define el constructor del adaptador de lista.
+     * @param context Contexto que lo manda llamar.
+     * @param items Elementos a guardar.
+     * @param layout Layout a utilizar.
+     */
+    public BottomSheetListAdapter(Context context, List<?> items, int layout) {
         this.context = context;
         this.items = items;
+        this.layout = layout;
     }
 
     @Override
@@ -44,7 +57,7 @@ public class BottomSheetListAdapter extends BaseAdapter {
         // inflate the layout for each list row
         if (convertView == null) {
             convertView = LayoutInflater.from(context).
-                    inflate(R.layout.layout_list_view_row_items, parent, false);
+                    inflate(layout, parent, false);
         }
 
         // get current item to be displayed
@@ -53,7 +66,7 @@ public class BottomSheetListAdapter extends BaseAdapter {
         // get the TextView for item name and item description
         TextView txtViewNombreRuta = convertView.findViewById(R.id.text_view_nombre_ruta);
         txtViewNombreRuta.setText(ruta.getNombre());
-        View viewColorRuta = (View) convertView.findViewById(R.id.view_color_ruta);
+        View viewColorRuta = convertView.findViewById(R.id.view_color_ruta);
         int color = Color.parseColor(ruta.getColor());
         viewColorRuta.setBackgroundColor(color);
 

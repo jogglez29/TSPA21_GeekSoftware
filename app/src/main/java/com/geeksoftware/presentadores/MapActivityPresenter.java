@@ -693,8 +693,8 @@ public class MapActivityPresenter {
         baseDatos.agregarRuta(new Ruta("Ruta 15","#7117aa"));
         baseDatos.agregarRuta(new Ruta("Ruta 16","#5e247b"));
         baseDatos.agregarRuta(new Ruta("Ruta 17","#44ba16"));
-        baseDatos.agregarRuta(new Ruta("Transportes de Guadalupe","#8e180e"));
-        baseDatos.agregarRuta(new Ruta("Transportes de Guadalupe Tierra y Libertad","#8e180e"));
+        baseDatos.agregarRuta(new Ruta("Transportes de Gdpe","#8e180e"));
+        baseDatos.agregarRuta(new Ruta("Transportes de Gdpe TyL","#8e180e"));
     }
 
     /**

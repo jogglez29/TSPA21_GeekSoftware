@@ -164,9 +164,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.setMyLocationEnabled(true);
         // Solicitud de todas las paradas de autobuses.
         presentador.cargarParadas();
-        // Asignación de una ventana personalizada cuando se selecciona
-        // una parada.
-        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(MapActivity.this));
 
         // Se configura el autocompletador de lugares.
         inicializarCompletadorLugares();
@@ -281,12 +278,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void mostrarInfoParada(List<Ruta> listaRutas, Marker marcador) {
-        marcador.setSnippet("");
-        String rutas = "";
-        for(Ruta ruta : listaRutas) {
-            rutas += "\n" + ruta.getNombre();
-        }
-        marcador.setSnippet(rutas);
+        // Asignación de una ventana personalizada cuando se selecciona
+        // una parada.
+        mMap.setInfoWindowAdapter(
+                new CustomInfoWindowAdapter(MapActivity.this, listaRutas));
     }
 
     @Override
@@ -306,7 +301,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         dialog.setContentView(R.layout.bottom_sheet_layout);
 
         BottomSheetListView listView = dialog.findViewById(R.id.listViewBtmSheet);
-        listView.setAdapter(new BottomSheetListAdapter(MapActivity.this, listaRutas));
+        listView.setAdapter(new BottomSheetListAdapter(
+                MapActivity.this, listaRutas, R.layout.layout_list_view_row_items));
         dialog.show();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -411,7 +407,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         dialog.setContentView(R.layout.bottom_sheet_layout);
 
         BottomSheetListView listView = dialog.findViewById(R.id.listViewBtmSheet);
-        listView.setAdapter(new BottomSheetListAdapter(MapActivity.this, rutas));
+        listView.setAdapter(new BottomSheetListAdapter(
+                MapActivity.this, rutas, R.layout.layout_list_view_row_items));
         dialog.show();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
