@@ -1,6 +1,7 @@
 package com.geeksoftware.presentadores;
 
 import android.content.Context;
+import android.location.LocationManager;
 
 import com.geeksoftware.basedatos.ConectorBaseDatos;
 import com.geeksoftware.basedatos.SQLiteDataBase;
@@ -11,6 +12,7 @@ import com.geeksoftware.utilidades.BuscadorParada;
 import com.geeksoftware.vistas.MapActivityView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,7 +141,7 @@ public class MapActivityPresenter {
      * Encuentra la parada en la que el usuario debería subir con base en una ruta seleccionada.
      * @param ruta Ruta seleccionada por el usuario.
      * @param localizacion Localización actual del usuario.
-     * **/
+     */
     public void cargarParadaSubida(Ruta ruta, LatLng localizacion) {
         //Ubicación actual del usuario
         ubicacionActual = localizacion;
@@ -166,8 +168,8 @@ public class MapActivityPresenter {
     /**
      * Encuentra la parada en la que el usuario debería bajar con base en una ruta seleccionada, a
      * fin de llegar a su destino en el menor tiempo posible.
-     * @param ruta Ruta seleccionada por el usuario.
-     * **/
+     * @param ruta Ruta seleccionada por el usuario. 
+     */
     public void cargarParadaBajada(Ruta ruta) {
         // Paradas cercanas por donde pasa la ruta deseada
         List<Parada> paradasPreliminares = new ArrayList<>();
@@ -206,6 +208,21 @@ public class MapActivityPresenter {
         if(listaRutas != null) {
             // No hubo problemas al obtener las rutas.
             vista.mostrarRutas(listaRutas);
+        }
+    }
+
+    /**
+     * Cálcula la distancia que hay entre la localización y la parada
+     * de bajada para lanzar la alerta de proximidad si se está a
+     * 500 metros o menos de distancia.
+     * @param localizacion Nueva localización
+     */
+    public void actualizarUbicacion(LatLng localizacion) {
+        Double distancia = SphericalUtil.computeDistanceBetween(localizacion,
+                new LatLng(paradaBajada.getLatitud(), paradaBajada.getLongitud()));
+
+        if(distancia <= 500) {
+            vista.mostrarAlertaBajada();
         }
     }
 

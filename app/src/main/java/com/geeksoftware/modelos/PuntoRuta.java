@@ -1,7 +1,8 @@
 package com.geeksoftware.modelos;
 
 /**
- * Define la información que debe contener una parada de autobus.
+ * Define la información que debe contener un Punto que ayuda a definir
+ * el trayecto de una Ruta.
  */
 public class PuntoRuta {
 
@@ -97,19 +98,19 @@ public class PuntoRuta {
     }
 
     /**
+     * Guarda el id de la ruta asociada al punto.
+     * @param  idRuta Identificador de la ruta asociada.
+     */
+    public void setIdRuta(Integer idRuta) {
+        this.idRuta = idRuta;
+    }
+
+    /**
      * Extrae el id de la ruta asociada al punto.
      * @return Identificador de la ruta.
      */
     public Integer getIdRuta() {
         return idRuta;
-    }
-
-    /**
-     * Guarda el id de la ruta asociada al punto.
-     * @param  idRuta Identificador de la ruta asociada.
-     */
-    public void setLongitud(Integer idRuta) {
-        this.idRuta = idRuta;
     }
 
     /**

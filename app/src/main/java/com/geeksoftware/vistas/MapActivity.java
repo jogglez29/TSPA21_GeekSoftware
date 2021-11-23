@@ -6,13 +6,17 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -47,7 +51,6 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.maps.android.ui.IconGenerator;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -180,6 +183,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 presentador.cargarInfoParada(Integer.parseInt(idParada), marker);
                 marker.showInfoWindow();
                 marker.setSnippet(idParada);
+                float zoom = mMap.getCameraPosition().zoom;
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        marker.getPosition(),zoom));
                 return true;
             }
         });
@@ -192,6 +198,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 presentador.cargarRutas();
             }
         });
+
+        // Evento para estar monitoreando la localización
+        LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 5,
+                new LocationListener() {
+                    @Override
+                    public void onLocationChanged(@NonNull Location location) {
+                        if(paradaBajada !=  null) {
+                            if(lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                                // La ubicación está activada.
+                                presentador.actualizarUbicacion(new LatLng(location.getLatitude(),
+                                        location.getLongitude()));
+
+                            } else {
+                                // La ubicación está desactivada.
+                                mostrarAlertaActivarUbicacion();
+                            }
+                        }
+                    }
+                });
     }
 
     /**
@@ -270,7 +296,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Marker marker = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
                     .position(ubicacionParada)
                     .title("Por aquí pasa"));
-                    //.setSnippet(String.valueOf(parada.getId()));
             markers.add(marker);
             marker.setSnippet(String.valueOf(parada.getId()));
         }
@@ -397,11 +422,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void marcarPunto(LatLng punto) {
-
-    }
-
-    @Override
     public void mostrarRutas(List<Ruta> rutas) {
         BottomSheetDialog dialog = new BottomSheetDialog(MapActivity.this);
         dialog.setContentView(R.layout.bottom_sheet_layout);
@@ -420,6 +440,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 dialog.dismiss();
             }
         });
+    }
+
+    @Override
+    public void mostrarAlertaBajada() {
+        Toast toast = Toast.makeText(this, "Prepárate para bajar del autobús",
+                Toast.LENGTH_LONG);
+        toast.getView().setBackgroundColor(Color.parseColor("#FFEB3B"));
+        toast.show();
+    }
+
+    @Override
+    public void mostrarAlertaActivarUbicacion() {
+        Toast toast = Toast.makeText(this,
+                "Activa los servicios de localización para poder notificarte " +
+                        "cuando tu parada esté cerca", Toast.LENGTH_LONG);
+        toast.getView().setBackgroundColor(Color.parseColor("#FFEB3B"));
+        toast.show();
     }
 
     /**

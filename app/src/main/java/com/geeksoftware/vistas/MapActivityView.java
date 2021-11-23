@@ -46,17 +46,41 @@ public interface MapActivityView {
      */
     void mostrarOpcionesDeRuta(List<Ruta> listaRutas);
 
+    /**
+     * Cambia el aspecto del marcador de la parada de subida.
+     * @param parada Información de la parada a resaltar.
+     */
     void resaltarParadaSubida(Parada parada);
 
+    /**
+     * Cambia el aspecto del marcador de la parada de bajda.
+     * @param parada Información de la parada a resaltar.
+     */
     void resaltarParadaBajada(Parada parada);
 
+    /**
+     * Resalta sobre el mapa el recorrido de una ruta.
+     * @param puntos Secuencia de localizaciones que ayudan a trazar
+     *               la ruta.
+     * @param ruta Información de la ruta a mostrar su recorrido.
+     */
     void mostrarRecorridoRuta(List<PuntoRuta> puntos, Ruta ruta);
-
-    void marcarPunto(LatLng punto);
 
     /**
      * Muestra todas las rutas existentes en la base de datos.
      * @param rutas Información de las rutas.
      */
     void mostrarRutas(List<Ruta> rutas);
+
+    /**
+     * Muestra un mensaje para indicar que se está
+     * cerca de la parada de bajada.
+     */
+    void mostrarAlertaBajada();
+
+    /**
+     * Muestra un mensaje para indicar que se
+     * active la ubicación del dispositivo.
+     */
+    void mostrarAlertaActivarUbicacion();
 }
