@@ -21,12 +21,24 @@ public interface ConectorBaseDatos {
     boolean agregarRuta(Ruta ruta);
 
     /**
+     * Añade varios registros de Rutas a la base de datos.
+     * @param rutas Lista con las rutas que se registraran.
+     */
+    void agregarRutas(List<Ruta> rutas);
+
+    /**
      * Añade un registro de una Parada a la base de datos.
      * @param parada Información de la parada a registrar.
      * @return Regresa <b>true</b> en caso de haber registrado
      * el dato exitosamente, o <b>false</b> en caso contrario.
      */
     boolean agregarParada(Parada parada);
+
+    /**
+     * Añade varios registros de Paradas a la base de datos.
+     * @param paradas Lista de las paradas que se registraran.
+     */
+    void agregarParadas(List<Parada> paradas);
 
     /**
      * Genera una relación entre una parada de autobus y una ruta
@@ -39,6 +51,13 @@ public interface ConectorBaseDatos {
     boolean agregarParadaRuta(Parada parada, Ruta ruta);
 
     /**
+     * Genera la relación entre varias paradas de autobus y varias rutas
+     * en la base de datos.
+     * @param paradaRutas Lista con las relaciones de las paradas con las rutas.
+     */
+    void agregarParadasRuta(List<ParadaRuta> paradaRutas);
+
+    /**
      * Añade a la base de datos un registro de los puntos
      * por los que pasa una ruta.
      * @param punto Información del punto a registrar.
@@ -46,6 +65,13 @@ public interface ConectorBaseDatos {
      * el dato exitosamente, o <b>false</b> en caso contrario.
      */
     boolean agregarPuntoRuta(PuntoRuta punto);
+
+    /**
+     * Añade a la base de datos los registro de los puntos por los que pasa cada ruta.
+     * por los que pasa una ruta.
+     * @param puntos Lista de los puntos correspondientes a cada ruta.
+     */
+    void agregarPuntosRuta(List<PuntoRuta> puntos);
 
     /**
      * Consulta todas las rutas que existen en la base de datos.

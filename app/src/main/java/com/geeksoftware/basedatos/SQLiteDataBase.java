@@ -104,6 +104,24 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
     }
 
     @Override
+    public void agregarRutas(List<Ruta> rutas) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        try {
+            for(int i = 0 ; i < rutas.size() ; i++ ) {
+                Ruta ruta = rutas.get(i);
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(RUTA_COL_NOM, ruta.getNombre());
+                contentValues.put(RUTA_COL_COLOR, ruta.getColor());
+                sqLiteDatabase.insert(TABLA_RUTA, null, contentValues);
+            }
+            sqLiteDatabase.setTransactionSuccessful();
+        }finally {
+            sqLiteDatabase.endTransaction();
+        }
+    }
+
+    @Override
     public boolean agregarParada(Parada parada) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -115,6 +133,26 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
             return false;
         else
             return true;
+    }
+
+    @Override
+    public void agregarParadas(List<Parada> paradas) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        try {
+            for(int i = 0 ; i < paradas.size() ; i++ ) {
+                Parada parada = paradas.get(i);
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(PARADA_COL_DESC, parada.getDescripcion());
+                contentValues.put(PARADA_COL_LAT, parada.getLatitud());
+                contentValues.put(PARADA_COL_LONG, parada.getLongitud());
+                sqLiteDatabase.insert(TABLA_PARADA, null, contentValues);
+            }
+            sqLiteDatabase.setTransactionSuccessful();
+        }
+        finally {
+            sqLiteDatabase.endTransaction();
+        }
     }
 
     @Override
@@ -131,6 +169,24 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
     }
 
     @Override
+    public void agregarParadasRuta(List<ParadaRuta> paradasRutas) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        try {
+            for(int i = 0 ; i < paradasRutas.size() ; i++ ) {
+                ParadaRuta paradaRuta = paradasRutas.get(i);
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(PARADA_RUTA_COL_ID_PAR, paradaRuta.getIdParada());
+                contentValues.put(PARADA_RUTA_COL_ID_RUTA, paradaRuta.getIdRuta());
+                sqLiteDatabase.insert(TABLA_PARADA_RUTA, null, contentValues);
+            }
+            sqLiteDatabase.setTransactionSuccessful();
+        }finally {
+            sqLiteDatabase.endTransaction();
+        }
+    }
+
+    @Override
     public boolean agregarPuntoRuta(PuntoRuta punto) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -142,6 +198,26 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
             return false;
         else
             return true;
+    }
+
+    @Override
+    public void agregarPuntosRuta(List<PuntoRuta> puntos) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        try {
+            for(int i = 0 ; i < puntos.size() ; i++ ) {
+                PuntoRuta punto = puntos.get(i);
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(PUNTOS_RUTA_COL_ID_RUTA, punto.getIdRuta());
+                contentValues.put(PUNTOS_RUTA_COL_LAT, punto.getLatitud());
+                contentValues.put(PUNTOS_RUTA_COL_LONG, punto.getLongitud());
+                sqLiteDatabase.insert(TABLA_PUNTOS_RUTA, null, contentValues);
+            }
+            sqLiteDatabase.setTransactionSuccessful();
+        }
+        finally {
+            sqLiteDatabase.endTransaction();
+        }
     }
 
     @Override
