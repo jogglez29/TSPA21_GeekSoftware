@@ -114,6 +114,8 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_PARADA);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_RUTA);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_PUNTOS_RUTA);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_DESTINO);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_RUTA_DESTINO);
         onCreate(sqLiteDatabase);
     }
 
@@ -499,6 +501,17 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
         } catch (SQLiteException ex) {
             return null;
         }
+    }
+
+    public void reiniciarBaseDeDatos(){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_PARADA_RUTA);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_PARADA);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_RUTA);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_PUNTOS_RUTA);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_DESTINO);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLA_RUTA_DESTINO);
+        onCreate(sqLiteDatabase);
     }
 
 }

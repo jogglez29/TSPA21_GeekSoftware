@@ -177,5 +177,10 @@ public interface ConectorBaseDatos {
      * o null en caso de haber ocurrido un error.
      */
     List<DestinoRuta> obtenerDestinosRutas();
+
+    /**
+     * Elimina todos los registros de la base de datos.
+     */
+    void reiniciarBaseDeDatos();
 }
 

@@ -64,27 +64,29 @@ public class MapActivityPresenter {
         paradasRutas = new ArrayList<>();
         puntos = new ArrayList<>();
         baseDatos = new SQLiteDataBase((Context) vista);
-        if (baseDatos.obtenerRutas().size() == 0){
-            registrarParadas();
-            registrarRutas();
-            registrarParadaRutas();
-            registrarPuntosRuta1();
-            registrarPuntosRuta2Zac();
-            registrarPuntosRuta2Gdpe();
-            registrarPuntosRuta3();
-            registrarPuntosRuta4();
-            registrarPuntosRuta5();
-            registrarPuntosRuta6();
-            registrarPuntosRuta7();
-            registrarPuntosRuta8();
-            registrarPuntosRuta14();
-            registrarPuntosRuta15();
-            registrarPuntosRuta16();
-            registrarPuntosRuta17();
-            registrarPuntosTransportesDeGuadalupe();
-            registrarPuntosTransportesDeGuadalupeTyL();
-            llenarBaseDeDatos();
-        }
+    }
+
+    public void inicializarBaseDeDatos(){
+        baseDatos.reiniciarBaseDeDatos();
+        registrarParadas();
+        registrarRutas();
+        registrarParadaRutas();
+        registrarPuntosRuta1();
+        registrarPuntosRuta2Zac();
+        registrarPuntosRuta2Gdpe();
+        registrarPuntosRuta3();
+        registrarPuntosRuta4();
+        registrarPuntosRuta5();
+        registrarPuntosRuta6();
+        registrarPuntosRuta7();
+        registrarPuntosRuta8();
+        registrarPuntosRuta14();
+        registrarPuntosRuta15();
+        registrarPuntosRuta16();
+        registrarPuntosRuta17();
+        registrarPuntosTransportesDeGuadalupe();
+        registrarPuntosTransportesDeGuadalupeTyL();
+        llenarBaseDeDatos();
     }
 
     /**
