@@ -206,11 +206,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-
-
         // Evento para estar monitoreando la localización
         LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 5,
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 100,
                 new LocationListener() {
                     @Override
                     public void onLocationChanged(@NonNull Location location) {

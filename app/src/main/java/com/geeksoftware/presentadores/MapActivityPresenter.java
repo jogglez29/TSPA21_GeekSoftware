@@ -238,12 +238,12 @@ public class MapActivityPresenter {
         Double distancia = SphericalUtil.computeDistanceBetween(localizacion,
                 new LatLng(paradaBajada.getLatitud(), paradaBajada.getLongitud()));
 
-        if(distancia <= 500) {
+        if(distancia <= 500 && distancia >= 100) {
             vista.mostrarAlertaBajada();
         }
     }
 
-    private void llenarBaseDeDatos(){
+    private void llenarBaseDeDatos() {
         baseDatos.agregarRutas(rutas);
         baseDatos.agregarParadas(paradas);
         baseDatos.agregarParadasRuta(paradasRutas);
