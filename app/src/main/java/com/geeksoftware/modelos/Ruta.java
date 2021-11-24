@@ -13,12 +13,14 @@ public class Ruta {
     private String nombre;
     /** Color asignado a la ruta. */
     private String color;
+    /** Nombre de la imagen de la ruta. */
+    private String imagen;
 
     /**
      * Crea la instancia de la ruta sin nada de información.
      */
     public Ruta() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
     /**
@@ -26,16 +28,17 @@ public class Ruta {
      * @param id Identificador de la ruta.
      */
     public Ruta(Integer id) {
-        this(id, null, null);
+        this(id, null, null, null);
     }
 
     /**
      * Crea la instancia de la ruta con toda su información excepto el id.
      * @param nombre Nombre de la ruta.
      * @param color Color asignado a la ruta.
+     * @param imagen Nombre de la imagen de la ruta.
      */
-    public Ruta(String nombre, String color) {
-        this(null, nombre, color);
+    public Ruta(String nombre, String color, String imagen) {
+        this(null, nombre, color, imagen);
     }
 
     /**
@@ -43,11 +46,13 @@ public class Ruta {
      * @param id Identificador de la ruta.
      * @param nombre Nombre de la ruta.
      * @param color Color asignado a la ruta.
+     * @param imagen Nombre de la imagen de la ruta.
      */
-    public Ruta(Integer id, String nombre, String color) {
+    public Ruta(Integer id, String nombre, String color, String imagen) {
         this.id = id;
         this.nombre = nombre;
         this.color = color;
+        this.imagen = imagen;
     }
 
     /**
@@ -96,6 +101,22 @@ public class Ruta {
      */
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    /**
+     * Extrae el nombre de la imagen de la ruta.
+     * @return Nombre de la imagen de la ruta.
+     */
+    public String getImagen() {
+        return imagen;
+    }
+
+    /**
+     * Guarda el nombre de la imagen de la ruta.
+     * @param imagen Nombre de la imagen de la ruta.
+     */
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
     @Override

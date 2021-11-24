@@ -89,6 +89,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private LatLng ubicacionActual;
     /** TEMP **/
     private FusedLocationProviderClient client;
+    /** ID de la imagen de la ruta **/
+    private int id_imagen;
 
 
     @Override
@@ -337,6 +339,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 MapActivity.this, listaRutas, R.layout.layout_list_view_row_items));
         dialog.show();
 
+        FloatingActionButton infoRuta = (FloatingActionButton)findViewById(R.id.botonInfoRuta);
+        ImageView imagenRuta = (ImageView) findViewById(R.id.imagenRuta);
+        CardView cardInfo = (CardView) findViewById(R.id.cardInfoRutas);
+        Context context = imagenRuta.getContext();
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -345,7 +352,24 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 presentador.cargarRecorridoRuta(rutaElegida);
                 presentador.cargarParadaSubida(rutaElegida, ubicacionActual);
                 presentador.cargarParadaBajada(rutaElegida);
+                if(cardInfo.getVisibility() == View.VISIBLE){
+                    cardInfo.setVisibility(View.GONE);
+                }
                 dialog.dismiss();
+                infoRuta.setVisibility(View.VISIBLE);
+                id_imagen = context.getResources().getIdentifier(rutaElegida.getImagen(),"drawable",context.getPackageName());
+            }
+        });
+
+        infoRuta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(cardInfo.getVisibility() == View.VISIBLE){
+                    cardInfo.setVisibility(View.GONE);
+                }else{
+                    imagenRuta.setImageResource(id_imagen);
+                    cardInfo.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -439,25 +463,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         dialog.show();
 
         FloatingActionButton infoRuta = (FloatingActionButton)findViewById(R.id.botonInfoRuta);
+        ImageView imagenRuta = (ImageView) findViewById(R.id.imagenRuta);
+        CardView cardInfo = (CardView) findViewById(R.id.cardInfoRutas);
+        Context context = imagenRuta.getContext();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if(cardInfo.getVisibility() == View.VISIBLE){
+                    cardInfo.setVisibility(View.GONE);
+                }
                 recorridoRuta.remove();
                 Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
                 presentador.cargarRecorridoRuta(rutaElegida);
                 dialog.dismiss();
                 infoRuta.setVisibility(View.VISIBLE);
-
-            }
+                id_imagen = context.getResources().getIdentifier(rutaElegida.getImagen(),"drawable",context.getPackageName());
+             }
         });
 
-        CardView cardInfo = (CardView) findViewById(R.id.cardInfoRutas);
         infoRuta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(cardInfo.getVisibility() == View.VISIBLE){
                     cardInfo.setVisibility(View.GONE);
                 }else{
+                    imagenRuta.setImageResource(id_imagen);
                     cardInfo.setVisibility(View.VISIBLE);
                 }
             }

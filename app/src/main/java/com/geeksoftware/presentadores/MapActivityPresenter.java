@@ -718,21 +718,21 @@ public class MapActivityPresenter {
      * Realiza la inserción de las rutas existentes en la base de datos.
      */
     private void registrarRutas(){
-        rutas.add(new Ruta("Ruta 1","#02baed"));
-        rutas.add(new Ruta("Ruta 2 Zacatecas","#037b1a"));
-        rutas.add(new Ruta("Ruta 2 Guadalupe","#037b1a"));
-        rutas.add(new Ruta("Ruta 3","#6a6c69"));
-        rutas.add(new Ruta("Ruta 4","#292cb1"));
-        rutas.add(new Ruta("Ruta 5","#fee800"));
-        rutas.add(new Ruta("Ruta 6","#f7a4d0"));
-        rutas.add(new Ruta("Ruta 7","#8f0c12"));
-        rutas.add(new Ruta("Ruta 8","#de8239"));
-        rutas.add(new Ruta("Ruta 14","#a95942"));
-        rutas.add(new Ruta("Ruta 15","#7117aa"));
-        rutas.add(new Ruta("Ruta 16","#5e247b"));
-        rutas.add(new Ruta("Ruta 17","#44ba16"));
-        rutas.add(new Ruta("Transportes de Gdpe","#8e180e"));
-        rutas.add(new Ruta("Transportes de Gdpe TyL","#8e180e"));
+        rutas.add(new Ruta("Ruta 1","#02baed","ruta_1"));
+        rutas.add(new Ruta("Ruta 2 Zacatecas","#037b1a", "ruta_2"));
+        rutas.add(new Ruta("Ruta 2 Guadalupe","#037b1a","ruta_2"));
+        rutas.add(new Ruta("Ruta 3","#6a6c69","ruta_3"));
+        rutas.add(new Ruta("Ruta 4","#292cb1","ruta_4"));
+        rutas.add(new Ruta("Ruta 5","#fee800","ruta_5"));
+        rutas.add(new Ruta("Ruta 6","#f7a4d0","ruta_6"));
+        rutas.add(new Ruta("Ruta 7","#8f0c12","ruta_7"));
+        rutas.add(new Ruta("Ruta 8","#de8239","ruta_8"));
+        rutas.add(new Ruta("Ruta 14","#a95942","ruta_14"));
+        rutas.add(new Ruta("Ruta 15","#7117aa","ruta_15"));
+        rutas.add(new Ruta("Ruta 16","#5e247b","ruta_16"));
+        rutas.add(new Ruta("Ruta 17","#44ba16","ruta_17"));
+        rutas.add(new Ruta("Transportes de Gdpe","#8e180e","ruta_tg"));
+        rutas.add(new Ruta("Transportes de Gdpe TyL","#8e180e","ruta_tg_tl"));
     }
 
     /**

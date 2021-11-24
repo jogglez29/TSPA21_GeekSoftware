@@ -79,7 +79,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:contentDescription="@string/ImagenBus"
-                app:srcCompat="@drawable/googleg_standard_color_18"
+                app:srcCompat="@drawable/default_ruta"
                 tools:ignore="ImageContrastCheck"
                 tools:srcCompat="@tools:sample/avatars" />
 

@@ -44,6 +44,8 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
     public static final String RUTA_COL_NOM = "NOMBRE";
     /** Nombre de la tercera columna de la tabla Color. */
     public static final String RUTA_COL_COLOR = "COLOR";
+    /** Nombre de la cuarta columna de la tabla Imagen. */
+    public static final String RUTA_COL_IMA = "IMAGEN";
 
                     /** Tabla PARADAS_RUTAS */
     /** Nombre de la tabla que establece relaciones entre paradas y rutas. */
@@ -76,7 +78,7 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("create table " + TABLA_PARADA + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, DESCRIPCION TEXT, LATITUD REAL, LONGITUD REAL, UNIQUE(LATITUD,LONGITUD))");
-        sqLiteDatabase.execSQL("create table " + TABLA_RUTA + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, NOMBRE TEXT UNIQUE, COLOR TEXT DEFAULT '#ffffff')");
+        sqLiteDatabase.execSQL("create table " + TABLA_RUTA + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, NOMBRE TEXT UNIQUE, COLOR TEXT DEFAULT '#ffffff', IMAGEN TEXT DEFAULT 'default_ruta')");
         sqLiteDatabase.execSQL("create table " + TABLA_PARADA_RUTA + "(ID_PARADA INTEGER, ID_RUTA INTEGER, FOREIGN KEY(ID_PARADA) REFERENCES PARADA(ID), FOREIGN KEY(ID_RUTA) REFERENCES RUTA(ID), PRIMARY KEY(ID_PARADA, ID_RUTA))");
         sqLiteDatabase.execSQL("create table " + TABLA_PUNTOS_RUTA + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, ID_RUTA INTEGER, LATITUD REAL, LONGITUD REAL, FOREIGN KEY(ID_RUTA) REFERENCES RUTA(ID))");
     }
@@ -96,6 +98,7 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
         ContentValues contentValues = new ContentValues();
         contentValues.put(RUTA_COL_NOM, ruta.getNombre());
         contentValues.put(RUTA_COL_COLOR, ruta.getColor());
+        contentValues.put(RUTA_COL_IMA, ruta.getImagen());
         long result = sqLiteDatabase.insert(TABLA_RUTA, null, contentValues);
         if (result == -1)
             return false;
@@ -113,6 +116,7 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(RUTA_COL_NOM, ruta.getNombre());
                 contentValues.put(RUTA_COL_COLOR, ruta.getColor());
+                contentValues.put(RUTA_COL_IMA, ruta.getImagen());
                 sqLiteDatabase.insert(TABLA_RUTA, null, contentValues);
             }
             sqLiteDatabase.setTransactionSuccessful();
@@ -231,7 +235,8 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
                 Integer id = res.getInt(0);
                 String nombre = res.getString(1);
                 String color = res.getString(2);
-                listaRutas.add(new Ruta(id, nombre, color));
+                String imagen = res.getString(3);
+                listaRutas.add(new Ruta(id, nombre, color, imagen));
             }
             return listaRutas;
 
@@ -314,7 +319,8 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
                 Integer idRuta = res.getInt(1);
                 String nombre = res.getString(3);
                 String color = res.getString(4);
-                listaRutasPorParada.add(new Ruta(idRuta, nombre, color));
+                String imagen = res.getString(5);
+                listaRutasPorParada.add(new Ruta(idRuta, nombre, color,imagen));
             }
             return listaRutasPorParada;
 
