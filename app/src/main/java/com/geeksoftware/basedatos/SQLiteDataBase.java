@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.geeksoftware.modelos.Destino;
+import com.geeksoftware.modelos.DestinoRuta;
 import com.geeksoftware.modelos.Parada;
 import com.geeksoftware.modelos.ParadaRuta;
 import com.geeksoftware.modelos.PuntoRuta;
@@ -35,6 +37,19 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
     /** Nombre de la cuarta columna de la tabla Parada.  */
     public static final String PARADA_COL_LONG = "LONGITUD";
 
+                    /** TABLA DESTINO */
+    /** Nombre de la tabla de los destinos. */
+    public static final String TABLA_DESTINO = "destino";
+    /** Nombre de la primer columna de la tabla Destino. */
+    public static final String DESTINO_COL_ID = "ID";
+    /** Nombre de la segunda columna de la tabla Destino. */
+    public static final String DESTINO_COL_DESC = "DESCRIPCION";
+    /** Nombre de la tercera columna de la tabla Destino.  */
+    public static final String DESTINO_COL_LAT= "LATITUD";
+    /** Nombre de la cuarta columna de la tabla Destino.  */
+    public static final String DESTINO_COL_LONG = "LONGITUD";
+
+
                     /** TABLA RUTA */
     /** Nombre de la tabla de las rutas. */
     public static final String TABLA_RUTA = "ruta";
@@ -55,7 +70,15 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
     /** Nombre de la segunda columna de la tabla paradas_rutas. */
     public static final String PARADA_RUTA_COL_ID_RUTA = "ID_RUTA";
 
-                    /** Tabla PARADAS_RUTAS */
+                    /** Tabla RUTA_DESTINO */
+    /** Nombre de la tabla que establece relaciones entre paradas y rutas. */
+    public static final String TABLA_RUTA_DESTINO = "ruta_destino";
+    /** Nombre de la primer columna de la tabla paradas_rutas. */
+    public static final String RUTA_DESTINO_COL_ID_DEST = "ID_DESTINO";
+    /** Nombre de la segunda columna de la tabla paradas_rutas. */
+    public static final String RUTA_DESTINO_COL_ID_RUTA = "ID_RUTA";
+
+                    /** Tabla PUNTOS_RUTA */
     /** Nombre de la tabla que establece relaciones entre paradas y rutas. */
     public static final String TABLA_PUNTOS_RUTA = "puntos_ruta";
     /** Nombre de la primer columna de la tabla puntos_ruta. */
@@ -78,8 +101,10 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("create table " + TABLA_PARADA + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, DESCRIPCION TEXT, LATITUD REAL, LONGITUD REAL, UNIQUE(LATITUD,LONGITUD))");
+        sqLiteDatabase.execSQL("create table " + TABLA_DESTINO + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, DESCRIPCION TEXT, LATITUD REAL, LONGITUD REAL, UNIQUE(LATITUD,LONGITUD))");
         sqLiteDatabase.execSQL("create table " + TABLA_RUTA + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, NOMBRE TEXT UNIQUE, COLOR TEXT DEFAULT '#ffffff', IMAGEN TEXT DEFAULT 'default_ruta')");
         sqLiteDatabase.execSQL("create table " + TABLA_PARADA_RUTA + "(ID_PARADA INTEGER, ID_RUTA INTEGER, FOREIGN KEY(ID_PARADA) REFERENCES PARADA(ID), FOREIGN KEY(ID_RUTA) REFERENCES RUTA(ID), PRIMARY KEY(ID_PARADA, ID_RUTA))");
+        sqLiteDatabase.execSQL("create table " + TABLA_RUTA_DESTINO + "(ID_DESTINO INTEGER, ID_RUTA INTEGER, FOREIGN KEY(ID_DESTINO) REFERENCES DESTINO(ID), FOREIGN KEY(ID_RUTA) REFERENCES RUTA(ID), PRIMARY KEY(ID_DESTINO, ID_RUTA))");
         sqLiteDatabase.execSQL("create table " + TABLA_PUNTOS_RUTA + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, ID_RUTA INTEGER, LATITUD REAL, LONGITUD REAL, FOREIGN KEY(ID_RUTA) REFERENCES RUTA(ID))");
     }
 
@@ -348,4 +373,132 @@ public class SQLiteDataBase extends SQLiteOpenHelper implements ConectorBaseDato
             return null;
         }
     }
+
+    @Override
+    public boolean agregarDestino(Destino destino) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DESTINO_COL_DESC, destino.getDescripcion());
+        contentValues.put(DESTINO_COL_LAT, destino.getLatitud());
+        contentValues.put(DESTINO_COL_LONG, destino.getLongitud());
+        long result = sqLiteDatabase.insert(TABLA_DESTINO, null, contentValues);
+        if (result == -1)
+            return false;
+        else
+            return true;
+    }
+
+    @Override
+    public void agregarDestinos(List<Destino> destinos) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        try {
+            for(int i = 0 ; i < destinos.size() ; i++ ) {
+                Destino destino = destinos.get(i);
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(DESTINO_COL_DESC, destino.getDescripcion());
+                contentValues.put(DESTINO_COL_LAT, destino.getLatitud());
+                contentValues.put(DESTINO_COL_LONG, destino.getLongitud());
+                sqLiteDatabase.insert(TABLA_DESTINO, null, contentValues);
+            }
+            sqLiteDatabase.setTransactionSuccessful();
+        }
+        finally {
+            sqLiteDatabase.endTransaction();
+        }
+    }
+
+    @Override
+    public boolean agregarRutaDestino(Destino destino, Ruta ruta) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(RUTA_DESTINO_COL_ID_DEST, destino.getId());
+        contentValues.put(RUTA_DESTINO_COL_ID_RUTA, ruta.getId());
+        long result = sqLiteDatabase.insert(TABLA_RUTA_DESTINO, null, contentValues);
+        if (result == -1)
+            return false;
+        else
+            return true;
+    }
+
+    @Override
+    public void agregarDestinosRuta(List<DestinoRuta> destinoRutas) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        try {
+            for(int i = 0 ; i < destinoRutas.size() ; i++ ) {
+                DestinoRuta destinoRuta = destinoRutas.get(i);
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(RUTA_DESTINO_COL_ID_DEST, destinoRuta.getIdDestino());
+                contentValues.put(RUTA_DESTINO_COL_ID_RUTA, destinoRuta.getIdRuta());
+                sqLiteDatabase.insert(TABLA_RUTA_DESTINO, null, contentValues);
+            }
+            sqLiteDatabase.setTransactionSuccessful();
+        }finally {
+            sqLiteDatabase.endTransaction();
+        }
+    }
+
+    @Override
+    public List<Destino> obtenerDestinos() {
+        try {
+            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery("select * from " + TABLA_DESTINO, null);
+            List<Destino> listaDestinos = new ArrayList<>();
+
+            while (res.moveToNext()) {
+                Integer id = res.getInt(0);
+                String descripcion = res.getString(1);
+                Double latitud = res.getDouble(2);
+                Double longitud = res.getDouble(3);
+                listaDestinos.add(new Destino(id, latitud, longitud, descripcion));
+            }
+            return listaDestinos;
+
+        } catch (SQLiteException ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Destino> obtenerDestinosRuta(Integer idRuta) {
+        try {
+            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery("select * from destino d" + " JOIN ruta_destino rd "
+                    + " ON rd.id_destino = d.id WHERE rd.id_ruta =" +  idRuta, null);
+            List<Destino> listaRutaDestinos = new ArrayList<>();
+
+            while (res.moveToNext()) {
+                Integer id = res.getInt(0);
+                String descripcion = res.getString(1);
+                Double latitud = res.getDouble(2);
+                Double longitud = res.getDouble(3);
+                listaRutaDestinos.add(new Destino(id, latitud, longitud, descripcion));
+            }
+            return listaRutaDestinos;
+
+        } catch (SQLiteException ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<DestinoRuta> obtenerDestinosRutas() {
+        try {
+            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery("SELECT * FROM ruta_destino", null);
+            List<DestinoRuta> listaRutasDestinos = new ArrayList<>();
+
+            while (res.moveToNext()) {
+                Integer idDestino = res.getInt(0);
+                Integer idRuta = res.getInt(1);
+                listaRutasDestinos.add(new DestinoRuta(idDestino, idRuta));
+            }
+            return listaRutasDestinos;
+
+        } catch (SQLiteException ex) {
+            return null;
+        }
+    }
+
 }

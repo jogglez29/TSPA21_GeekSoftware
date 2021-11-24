@@ -1,5 +1,7 @@
 package com.geeksoftware.basedatos;
 
+import com.geeksoftware.modelos.Destino;
+import com.geeksoftware.modelos.DestinoRuta;
 import com.geeksoftware.modelos.Parada;
 import com.geeksoftware.modelos.ParadaRuta;
 import com.geeksoftware.modelos.PuntoRuta;
@@ -35,10 +37,24 @@ public interface ConectorBaseDatos {
     boolean agregarParada(Parada parada);
 
     /**
+     * Añade un registro de un Destino a la base de datos.
+     * @param destino Información del destino a registrar.
+     * @return Regresa <b>true</b> en caso de haber registrado
+     * el dato exitosamente, o <b>false</b> en caso contrario.
+     */
+    boolean agregarDestino(Destino destino);
+
+    /**
      * Añade varios registros de Paradas a la base de datos.
      * @param paradas Lista de las paradas que se registraran.
      */
     void agregarParadas(List<Parada> paradas);
+
+    /**
+     * Añade varios registros de Destinos a la base de datos.
+     * @param destinos Lista de los destinos que se registrarán.
+     */
+    void agregarDestinos(List<Destino> destinos);
 
     /**
      * Genera una relación entre una parada de autobus y una ruta
@@ -120,4 +136,46 @@ public interface ConectorBaseDatos {
      * obtenidas o null en caso de haber ocurrido un error.
      */
     List<PuntoRuta> obtenerPuntosRuta(Integer idRuta);
+
+    /**
+     * Genera una relación entre un destino de autobús y una ruta
+     * en la base de datos.
+     * @param destino Información del destino a relacionar.
+     * @param ruta Información de la ruta a relacionar.
+     * @return Regresa <b>true</b> en caso de haber registrado
+     * el dato exitosamente, o <b>false</b> en caso contrario.
+     */
+    boolean agregarRutaDestino(Destino destino, Ruta ruta);
+
+    /**
+     * Genera la relación entre varios destinos  y varias rutas
+     * en la base de datos.
+     * @param destinoRutas Lista con las relaciones de los destinos con las rutas.
+     */
+    void agregarDestinosRuta(List<DestinoRuta> destinoRutas);
+
+    /**
+     * Consulta todos los destinos que existen en la base de datos.
+     * @return Regresa una lista con los destinos obtenidos o null
+     * en caso de haber ocurrido un error.
+     */
+    List<Destino> obtenerDestinos();
+
+    /**
+     * Consulta los destinos existentes en la base de datos correspondientes
+     * a una ruta en especifico.
+     * @param idRuta Identificador de la ruta de la cual se obtendran sus destinos.
+     * @return Regresa una lista con la información de los destinos
+     * obtenidas o null en caso de haber ocurrido un error.
+     */
+    List<Destino> obtenerDestinosRuta(Integer idRuta);
+
+    /**
+     * Consulta todas las relaciones entre destinos y rutas que existen
+     * en la base de datos.
+     * @return Regresa una lista con la información obtenida
+     * o null en caso de haber ocurrido un error.
+     */
+    List<DestinoRuta> obtenerDestinosRutas();
 }
+

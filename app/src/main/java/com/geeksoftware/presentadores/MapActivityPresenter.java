@@ -6,6 +6,7 @@ import android.location.LocationManager;
 import com.geeksoftware.basedatos.ConectorBaseDatos;
 import com.geeksoftware.basedatos.SQLiteDataBase;
 import com.geeksoftware.modelos.Parada;
+import com.geeksoftware.modelos.Destino;
 import com.geeksoftware.modelos.ParadaRuta;
 import com.geeksoftware.modelos.PuntoRuta;
 import com.geeksoftware.modelos.Ruta;
@@ -45,6 +46,8 @@ public class MapActivityPresenter {
     private List<PuntoRuta> puntos;
     /** Lista de todas las paradas **/
     private List<Parada> paradas;
+    /** Lista de todos los destinos populares **/
+    private List<Destino> destinosPopulares;
     /** Lista de paradas correspondientes a cada ruta **/
     private List<ParadaRuta> paradasRutas;
     /** Lista de rutas **/
@@ -245,6 +248,13 @@ public class MapActivityPresenter {
         baseDatos.agregarParadas(paradas);
         baseDatos.agregarParadasRuta(paradasRutas);
         baseDatos.agregarPuntosRuta(puntos);
+    }
+
+    /**
+     * Realiza la inserción de los destinos populares a la base de datos.
+     */
+    private void registrarDestinosPopulares(){
+        return;
     }
 
     /**
