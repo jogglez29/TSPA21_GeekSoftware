@@ -740,10 +740,45 @@ public class MapActivityPresenter {
         paradas.add(new Parada(22.768437,-102.482584,""));
         paradas.add(new Parada(22.769986,-102.481675,""));
         paradas.add(new Parada(22.769976,-102.481966,""));
-        paradas.add(new Parada(22.771086,-102.484951,""));
+        paradas.add(new Parada(22.771028, -102.485503,""));
         paradas.add(new Parada(22.770645,-102.488341,""));
         paradas.add(new Parada(22.775025,-102.485414,""));
         paradas.add(new Parada(22.783089,-102.49616,""));
+
+        //NuevasParadasRutaGuadalupeTyL
+        paradas.add(new Parada(22.754848, -102.522419,""));
+        paradas.add(new Parada(22.758444, -102.522015,""));
+        paradas.add(new Parada(22.761069, -102.520465,""));
+        paradas.add(new Parada(22.759603, -102.517869,""));
+        paradas.add(new Parada(22.758046, -102.514728,""));
+        paradas.add(new Parada(22.757249, -102.511860,""));
+        paradas.add(new Parada(22.768508, -102.499879,""));
+        paradas.add(new Parada(22.767606, -102.497584,""));
+        paradas.add(new Parada(22.768907, -102.494076,""));
+        paradas.add(new Parada(22.770015, -102.492761,""));
+        paradas.add(new Parada(22.770861, -102.488652,""));
+        paradas.add(new Parada(22.772973, -102.486764,""));
+        paradas.add(new Parada(22.770211, -102.486738,""));
+        paradas.add(new Parada(22.769993, -102.483986,""));
+        paradas.add(new Parada(22.769084, -102.490193,""));
+        paradas.add(new Parada(22.766216, -102.493594,""));
+        paradas.add(new Parada(22.764262, -102.496603,""));
+        paradas.add(new Parada(22.762352, -102.497285,""));
+        paradas.add(new Parada(22.761903, -102.493625,""));
+        paradas.add(new Parada(22.761468, -102.489559,""));
+
+        //NuevasParadasRuta5
+        paradas.add(new Parada(22.778648, -102.571592,""));
+        paradas.add(new Parada(22.780399, -102.570819,""));
+        paradas.add(new Parada(22.781623, -102.569993,""));
+        paradas.add(new Parada(22.783335, -102.570904,""));
+        paradas.add(new Parada(22.786664, -102.569879,""));
+        paradas.add(new Parada(22.784557, -102.569056,""));
+        paradas.add(new Parada(22.783087, -102.569465,""));
+        paradas.add(new Parada(22.782071, -102.571077,""));
+
+        //NuevasParadasRuta7
+        paradas.add(new Parada(22.783707, -102.611446,""));
     }
 
     /**
@@ -865,6 +900,9 @@ public class MapActivityPresenter {
         paradasRutas.add(new ParadaRuta(new Parada(54),new Ruta(10)));
         paradasRutas.add(new ParadaRuta(new Parada(55),new Ruta(10)));
         paradasRutas.add(new ParadaRuta(new Parada(56),new Ruta(6)));
+
+        paradasRutas.add(new ParadaRuta(new Parada(57),new Ruta(8)));
+        paradasRutas.add(new ParadaRuta(new Parada(58),new Ruta(8)));
 
         paradasRutas.add(new ParadaRuta(new Parada(59),new Ruta(1)));
         paradasRutas.add(new ParadaRuta(new Parada(59),new Ruta(13)));
@@ -1026,7 +1064,6 @@ public class MapActivityPresenter {
         paradasRutas.add(new ParadaRuta(new Parada(172),new Ruta(8)));
         paradasRutas.add(new ParadaRuta(new Parada(172),new Ruta(14)));
 
-        paradasRutas.add(new ParadaRuta(new Parada(173),new Ruta(2)));
         paradasRutas.add(new ParadaRuta(new Parada(174),new Ruta(8)));
 
         paradasRutas.add(new ParadaRuta(new Parada(175),new Ruta(8)));
@@ -1134,8 +1171,13 @@ public class MapActivityPresenter {
         paradasRutas.add(new ParadaRuta(new Parada(217),new Ruta(5)));
         paradasRutas.add(new ParadaRuta(new Parada(218),new Ruta(6)));
         paradasRutas.add(new ParadaRuta(new Parada(218),new Ruta(9)));
+
         paradasRutas.add(new ParadaRuta(new Parada(219),new Ruta(9)));
+        paradasRutas.add(new ParadaRuta(new Parada(219),new Ruta(6)));
+
         paradasRutas.add(new ParadaRuta(new Parada(220),new Ruta(9)));
+        paradasRutas.add(new ParadaRuta(new Parada(220),new Ruta(6)));
+
         paradasRutas.add(new ParadaRuta(new Parada(221),new Ruta(9)));
         paradasRutas.add(new ParadaRuta(new Parada(222),new Ruta(9)));
         paradasRutas.add(new ParadaRuta(new Parada(223),new Ruta(9)));
@@ -1273,7 +1315,10 @@ public class MapActivityPresenter {
         paradasRutas.add(new ParadaRuta(new Parada(299),new Ruta(15)));
         paradasRutas.add(new ParadaRuta(new Parada(300),new Ruta(12)));
         paradasRutas.add(new ParadaRuta(new Parada(300),new Ruta(13)));
+
         paradasRutas.add(new ParadaRuta(new Parada(301),new Ruta(3)));
+        paradasRutas.add(new ParadaRuta(new Parada(301),new Ruta(15)));
+
         paradasRutas.add(new ParadaRuta(new Parada(302),new Ruta(12)));
         paradasRutas.add(new ParadaRuta(new Parada(302),new Ruta(13)));
         paradasRutas.add(new ParadaRuta(new Parada(303),new Ruta(12)));
@@ -1405,15 +1450,34 @@ public class MapActivityPresenter {
         paradasRutas.add(new ParadaRuta(new Parada(404),new Ruta(11)));
         paradasRutas.add(new ParadaRuta(new Parada(405),new Ruta(7)));
         paradasRutas.add(new ParadaRuta(new Parada(405),new Ruta(11)));
+
         paradasRutas.add(new ParadaRuta(new Parada(406),new Ruta(7)));
+        paradasRutas.add(new ParadaRuta(new Parada(406),new Ruta(15)));
+
         paradasRutas.add(new ParadaRuta(new Parada(407),new Ruta(7)));
+        paradasRutas.add(new ParadaRuta(new Parada(407),new Ruta(15)));
+
         paradasRutas.add(new ParadaRuta(new Parada(408),new Ruta(7)));
+        paradasRutas.add(new ParadaRuta(new Parada(408),new Ruta(15)));
+
         paradasRutas.add(new ParadaRuta(new Parada(409),new Ruta(7)));
+        paradasRutas.add(new ParadaRuta(new Parada(409),new Ruta(15)));
+
         paradasRutas.add(new ParadaRuta(new Parada(410),new Ruta(7)));
+        paradasRutas.add(new ParadaRuta(new Parada(410),new Ruta(15)));
+
         paradasRutas.add(new ParadaRuta(new Parada(411),new Ruta(7)));
+        paradasRutas.add(new ParadaRuta(new Parada(411),new Ruta(15)));
+
         paradasRutas.add(new ParadaRuta(new Parada(412),new Ruta(7)));
+        paradasRutas.add(new ParadaRuta(new Parada(412),new Ruta(15)));
+
         paradasRutas.add(new ParadaRuta(new Parada(413),new Ruta(7)));
+        paradasRutas.add(new ParadaRuta(new Parada(413),new Ruta(15)));
+
         paradasRutas.add(new ParadaRuta(new Parada(414),new Ruta(7)));
+        paradasRutas.add(new ParadaRuta(new Parada(414),new Ruta(15)));
+
         paradasRutas.add(new ParadaRuta(new Parada(415),new Ruta(7)));
         paradasRutas.add(new ParadaRuta(new Parada(416),new Ruta(7)));
         paradasRutas.add(new ParadaRuta(new Parada(416),new Ruta(12)));
@@ -1464,9 +1528,15 @@ public class MapActivityPresenter {
         paradasRutas.add(new ParadaRuta(new Parada(455),new Ruta(13)));
         paradasRutas.add(new ParadaRuta(new Parada(456),new Ruta(13)));
         paradasRutas.add(new ParadaRuta(new Parada(457),new Ruta(11)));
+
         paradasRutas.add(new ParadaRuta(new Parada(458),new Ruta(11)));
+        paradasRutas.add(new ParadaRuta(new Parada(458),new Ruta(15)));
+
         paradasRutas.add(new ParadaRuta(new Parada(459),new Ruta(11)));
+
         paradasRutas.add(new ParadaRuta(new Parada(460),new Ruta(11)));
+        paradasRutas.add(new ParadaRuta(new Parada(460),new Ruta(15)));
+
         paradasRutas.add(new ParadaRuta(new Parada(461),new Ruta(12)));
 
         paradasRutas.add(new ParadaRuta(new Parada(24),new Ruta(15)));
@@ -1499,6 +1569,42 @@ public class MapActivityPresenter {
         paradasRutas.add(new ParadaRuta(new Parada(288),new Ruta(15)));
         paradasRutas.add(new ParadaRuta(new Parada(276),new Ruta(15)));
         paradasRutas.add(new ParadaRuta(new Parada(291),new Ruta(15)));
+
+        //NuevasParadasRutaGuadalupeTyL
+        paradasRutas.add(new ParadaRuta(new Parada(462),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(463),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(464),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(465),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(466),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(467),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(468),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(469),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(470),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(471),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(472),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(473),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(474),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(475),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(476),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(477),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(478),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(479),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(480),new Ruta(15)));
+        paradasRutas.add(new ParadaRuta(new Parada(481),new Ruta(15)));
+
+        //NuevasParadasRuta5
+        paradasRutas.add(new ParadaRuta(new Parada(482),new Ruta(6)));
+        paradasRutas.add(new ParadaRuta(new Parada(483),new Ruta(6)));
+        paradasRutas.add(new ParadaRuta(new Parada(484),new Ruta(6)));
+        paradasRutas.add(new ParadaRuta(new Parada(485),new Ruta(6)));
+        paradasRutas.add(new ParadaRuta(new Parada(486),new Ruta(6)));
+        paradasRutas.add(new ParadaRuta(new Parada(487),new Ruta(6)));
+        paradasRutas.add(new ParadaRuta(new Parada(488),new Ruta(6)));
+        paradasRutas.add(new ParadaRuta(new Parada(489),new Ruta(6)));
+
+        //NuevasParadasRuta7
+        paradasRutas.add(new ParadaRuta(new Parada(490),new Ruta(8)));
+
     }
 
     /**
