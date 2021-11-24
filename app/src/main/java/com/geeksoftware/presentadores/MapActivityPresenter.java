@@ -5,6 +5,7 @@ import android.location.LocationManager;
 
 import com.geeksoftware.basedatos.ConectorBaseDatos;
 import com.geeksoftware.basedatos.SQLiteDataBase;
+import com.geeksoftware.modelos.DestinoRuta;
 import com.geeksoftware.modelos.Parada;
 import com.geeksoftware.modelos.Destino;
 import com.geeksoftware.modelos.ParadaRuta;
@@ -50,6 +51,8 @@ public class MapActivityPresenter {
     private List<Destino> destinosPopulares;
     /** Lista de paradas correspondientes a cada ruta **/
     private List<ParadaRuta> paradasRutas;
+    /** Lista de destinos correspondientes a cada ruta **/
+    private List<DestinoRuta> destinosRutas;
     /** Lista de rutas **/
     private List<Ruta> rutas;
 
@@ -61,7 +64,9 @@ public class MapActivityPresenter {
         this.vista = vista;
         rutas = new ArrayList<>();
         paradas = new ArrayList<>();
+        destinosPopulares = new ArrayList<>();
         paradasRutas = new ArrayList<>();
+        destinosRutas = new ArrayList<>();
         puntos = new ArrayList<>();
         baseDatos = new SQLiteDataBase((Context) vista);
     }
@@ -70,6 +75,8 @@ public class MapActivityPresenter {
         baseDatos.reiniciarBaseDeDatos();
         registrarParadas();
         registrarRutas();
+        registrarDestinosPopulares();
+        registrarDestinoRutas();
         registrarParadaRutas();
         registrarPuntosRuta1();
         registrarPuntosRuta2Zac();
@@ -256,7 +263,10 @@ public class MapActivityPresenter {
      * Realiza la inserción de los destinos populares a la base de datos.
      */
     private void registrarDestinosPopulares(){
-        return;
+        destinosPopulares.add(new Destino(22.761699845735176, -102.47971953676223, "Villas de Guadalupe"));     //1
+        destinosPopulares.add(new Destino(22.769798545276643, -102.57201623073544, "Plaza Bicentenario"));      //2
+        destinosPopulares.add(new Destino(22.7693660687711, -102.64226018750308, "Campus UAZ Siglo XXI"));      //3
+        destinosPopulares.add(new Destino(22.77394069430427, -102.59732718456279, "Galerías Zacatecas"));       //4
     }
 
     /**
@@ -745,6 +755,17 @@ public class MapActivityPresenter {
         rutas.add(new Ruta("Ruta 17","#44ba16","ruta_17"));
         rutas.add(new Ruta("Transportes de Gdpe","#8e180e","ruta_tg"));
         rutas.add(new Ruta("Transportes de Gdpe TyL","#8e180e","ruta_tg_tl"));
+    }
+
+    /**
+     * Solicita la inserción de la relación de un destino con una ruta en la base de datos.
+     */
+    private void registrarDestinoRutas(){
+        // Destinos populares Ruta 17
+        destinosRutas.add(new DestinoRuta(new Destino(1), new Ruta(13)));
+        destinosRutas.add(new DestinoRuta(new Destino(2), new Ruta(13)));
+        destinosRutas.add(new DestinoRuta(new Destino(3), new Ruta(13)));
+        destinosRutas.add(new DestinoRuta(new Destino(4), new Ruta(13)));
     }
 
     /**
