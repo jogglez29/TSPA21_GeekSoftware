@@ -2,6 +2,7 @@ package com.geeksoftware.vistas;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
@@ -51,6 +52,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -196,8 +198,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 presentador.cargarRutas();
+
             }
         });
+
+
 
         // Evento para estar monitoreando la localización
         LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -431,6 +436,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 MapActivity.this, rutas, R.layout.layout_list_view_row_items));
         dialog.show();
 
+        FloatingActionButton infoRuta = (FloatingActionButton)findViewById(R.id.botonInfoRuta);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -438,6 +444,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
                 presentador.cargarRecorridoRuta(rutaElegida);
                 dialog.dismiss();
+                // CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) infoRuta.getLayoutParams();
+                // p.setAnchorId(View.NO_ID);
+                // infoRuta.setLayoutParams(p);
+                infoRuta.setVisibility(View.VISIBLE);
             }
         });
     }

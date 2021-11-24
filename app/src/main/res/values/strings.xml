@@ -4,4 +4,7 @@
     <string name="seleccione_una_ruta">Seleccione una ruta</string>
     <string name="buscar_destino">Buscar un destino</string>
     <string name="ver_rutas">Ver rutas</string>
+    <string name="destinos_populares">Destinos Populares</string>
+    <string name="verInfoRuta">Ver información de la ruta</string>
+    <string name="ImagenBus">Imágen del autobús</string>
 </resources>

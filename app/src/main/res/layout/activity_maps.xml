@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
@@ -26,6 +27,81 @@
         android:layout_margin="20dp"
         android:layout_alignParentBottom="true"
         android:text="@string/ver_rutas"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/botonInfoRuta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="27dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:srcCompat="@android:drawable/ic_dialog_info"
+        android:contentDescription="@string/verInfoRuta" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardInfoRutas"
+        android:layout_width="wrap_content"
+        android:layout_height="164dp"
+        android:layout_above="@+id/ver_rutas"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="108dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="391dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imagenRuta"
+                android:layout_width="102dp"
+                android:layout_height="102dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:contentDescription="@string/ImagenBus"
+                app:srcCompat="@drawable/googleg_standard_color_18"
+                tools:ignore="ImageContrastCheck"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/tituloDestinosPopulares"
+                android:layout_width="122dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="43dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="43dp"
+                android:layout_toEndOf="@+id/imagenRuta"
+                android:gravity="center"
+                android:text="@string/destinos_populares"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/textDestinosPopulares"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tituloDestinosPopulares"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_toEndOf="@+id/imagenRuta" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
 
 </RelativeLayout>
