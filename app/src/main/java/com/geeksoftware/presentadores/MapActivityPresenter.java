@@ -121,6 +121,14 @@ public class MapActivityPresenter {
     }
 
     /**
+     * Extrae de la base de datos los destinos de autobuses correspondientes a una ruta.
+     */
+    public List<Destino> extraerDestinosRuta(Integer idRuta){
+        List<Destino> listaDestinos = baseDatos.obtenerDestinosRuta(idRuta);
+        return listaDestinos;
+    }
+
+    /**
      * Extrae la información de las rutas que se detienen en una determinada parada de autobus.
      * @param idParada Identificador de la parada a consultar sus rutas.
      * @param marcador Punto del mapa donde se mostrará la información de las rutas
@@ -254,8 +262,10 @@ public class MapActivityPresenter {
 
     private void llenarBaseDeDatos() {
         baseDatos.agregarRutas(rutas);
+        baseDatos.agregarDestinos(destinosPopulares);
         baseDatos.agregarParadas(paradas);
         baseDatos.agregarParadasRuta(paradasRutas);
+        baseDatos.agregarDestinosRuta(destinosRutas);
         baseDatos.agregarPuntosRuta(puntos);
     }
 

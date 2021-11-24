@@ -27,8 +27,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.geeksoftware.modelos.Destino;
 import com.geeksoftware.modelos.Parada;
 import com.geeksoftware.modelos.PuntoRuta;
 import com.geeksoftware.modelos.Ruta;
@@ -91,6 +93,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationProviderClient client;
     /** ID de la imagen de la ruta **/
     private int id_imagen;
+    /** Lista de destinos populares para la ruta **/
+    private List<String> listaDestinosPopulares;
 
 
     @Override
@@ -341,11 +345,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         FloatingActionButton infoRuta = (FloatingActionButton)findViewById(R.id.botonInfoRuta);
         ImageView imagenRuta = (ImageView) findViewById(R.id.imagenRuta);
         CardView cardInfo = (CardView) findViewById(R.id.cardInfoRutas);
+        TextView textViewDestinos = (TextView) findViewById(R.id.textDestinosPopulares);
         Context context = imagenRuta.getContext();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                listaDestinosPopulares = new ArrayList<>();
                 recorridoRuta.remove();
                 Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
                 presentador.cargarRecorridoRuta(rutaElegida);
@@ -357,6 +363,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 dialog.dismiss();
                 infoRuta.setVisibility(View.VISIBLE);
                 id_imagen = context.getResources().getIdentifier(rutaElegida.getImagen(),"drawable",context.getPackageName());
+                // obtener la lista de destinos populares
+                List<Destino> destinosPopulares = presentador.extraerDestinosRuta(rutaElegida.getId());
+                // Extraer la descripción de cada destino popular
+                for(int destino = 0; destino < destinosPopulares.size(); destino++){
+                    listaDestinosPopulares.add(destinosPopulares.get(destino).getDescripcion());
+                }
             }
         });
 
@@ -367,6 +379,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     cardInfo.setVisibility(View.GONE);
                 }else{
                     imagenRuta.setImageResource(id_imagen);
+                    if (listaDestinosPopulares.size() != 0){
+                        String descripcionDestinos = "";
+                        for (int destino = 0; destino < listaDestinosPopulares.size(); destino++){
+                            descripcionDestinos = descripcionDestinos.concat(listaDestinosPopulares.get(destino)+"\n");
+                        }
+                        textViewDestinos.setVisibility(View.VISIBLE);
+                        textViewDestinos.setText(descripcionDestinos);
+
+                    }
                     cardInfo.setVisibility(View.VISIBLE);
                 }
             }
