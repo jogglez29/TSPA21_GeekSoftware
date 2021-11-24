@@ -832,8 +832,6 @@ public class MapActivityPresenter {
         paradasRutas.add(new ParadaRuta(new Parada(54),new Ruta(10)));
         paradasRutas.add(new ParadaRuta(new Parada(55),new Ruta(10)));
         paradasRutas.add(new ParadaRuta(new Parada(56),new Ruta(6)));
-        paradasRutas.add(new ParadaRuta(new Parada(57),new Ruta(9)));
-        paradasRutas.add(new ParadaRuta(new Parada(58),new Ruta(9)));
 
         paradasRutas.add(new ParadaRuta(new Parada(59),new Ruta(1)));
         paradasRutas.add(new ParadaRuta(new Parada(59),new Ruta(13)));
