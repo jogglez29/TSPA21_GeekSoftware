@@ -503,8 +503,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void mostrarAlertaActivarUbicacion() {
         Toast toast = Toast.makeText(this,
-                "Activa los servicios de localización para poder notificarte " +
-                        "cuando tu parada esté cerca", Toast.LENGTH_LONG);
+                "Activa los servicios de localización", Toast.LENGTH_LONG);
         toast.getView().setBackgroundColor(Color.parseColor("#FFEB3B"));
         toast.show();
     }
