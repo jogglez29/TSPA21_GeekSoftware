@@ -2,6 +2,7 @@ package com.geeksoftware.vistas;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 
@@ -24,6 +25,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -444,10 +446,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
                 presentador.cargarRecorridoRuta(rutaElegida);
                 dialog.dismiss();
-                // CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) infoRuta.getLayoutParams();
-                // p.setAnchorId(View.NO_ID);
-                // infoRuta.setLayoutParams(p);
                 infoRuta.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        CardView cardInfo = (CardView) findViewById(R.id.cardInfoRutas);
+        infoRuta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(cardInfo.getVisibility() == View.VISIBLE){
+                    cardInfo.setVisibility(View.GONE);
+                }else{
+                    cardInfo.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
