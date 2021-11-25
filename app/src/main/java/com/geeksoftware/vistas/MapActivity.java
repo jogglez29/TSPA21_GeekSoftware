@@ -531,6 +531,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 id_imagen = context.getResources().getIdentifier(rutaElegida.getImagen(),"drawable",context.getPackageName());
                 // obtener la lista de descripciones de los destinos populares
                 listaDestinosPopulares = presentador.extraerDestinosRutaDescripcion(rutaElegida.getId());
+                // Se aleja la vista del mapa para que se logre apreciar el trazo de la ruta.
+                LatLng zacGpe = new LatLng(22.76424926, -102.5482729);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zacGpe,11.0f));
                 System.out.println(">>> TAMAÑO DEL ARREGLO" + listaDestinosPopulares);
              }
         });
