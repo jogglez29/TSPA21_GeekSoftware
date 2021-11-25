@@ -40,6 +40,7 @@ import com.geeksoftware.modelos.PuntoRuta;
 import com.geeksoftware.modelos.Ruta;
 import com.geeksoftware.presentadores.MapActivityPresenter;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.dynamic.IFragmentWrapper;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -362,7 +363,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         }, 1500);
                     }
 
-                    listaDestinosPopulares = new ArrayList<>();
+                    if (listaDestinosPopulares != null){
+                        listaDestinosPopulares.removeAll(listaDestinosPopulares);
+                    }
                     recorridoRuta.remove();
                     Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
                     presentador.cargarRecorridoRuta(rutaElegida);
@@ -387,14 +390,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     cardInfo.setVisibility(View.GONE);
                 }else{
                     imagenRuta.setImageResource(id_imagen);
+                    String descripcionDestinos = "";
                     if (listaDestinosPopulares.size() != 0){
-                        String descripcionDestinos = "";
                         for (int destino = 0; destino < listaDestinosPopulares.size(); destino++){
-                            descripcionDestinos = descripcionDestinos.concat(listaDestinosPopulares.get(destino)+"\n");
+                            descripcionDestinos = descripcionDestinos.concat("- " + listaDestinosPopulares.get(destino)+"\n");
                         }
-                        textViewDestinos.setVisibility(View.VISIBLE);
                         textViewDestinos.setText(descripcionDestinos);
 
+                    } else {
+                        textViewDestinos.setText(descripcionDestinos);
                     }
                     cardInfo.setVisibility(View.VISIBLE);
                 }
@@ -512,7 +516,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                listaDestinosPopulares = new ArrayList<>();
+                if (listaDestinosPopulares != null){
+                    listaDestinosPopulares.removeAll(listaDestinosPopulares);
+                }
+                //listaDestinosPopulares = new ArrayList<>();
                 if(cardInfo.getVisibility() == View.VISIBLE){
                     cardInfo.setVisibility(View.GONE);
                 }
@@ -524,6 +531,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 id_imagen = context.getResources().getIdentifier(rutaElegida.getImagen(),"drawable",context.getPackageName());
                 // obtener la lista de descripciones de los destinos populares
                 listaDestinosPopulares = presentador.extraerDestinosRutaDescripcion(rutaElegida.getId());
+                System.out.println(">>> TAMAÑO DEL ARREGLO" + listaDestinosPopulares);
              }
         });
 
@@ -534,14 +542,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     cardInfo.setVisibility(View.GONE);
                 }else{
                     imagenRuta.setImageResource(id_imagen);
+                    String descripcionDestinos = "";
                     if (listaDestinosPopulares.size() != 0){
-                        String descripcionDestinos = "";
                         for (int destino = 0; destino < listaDestinosPopulares.size(); destino++){
                             descripcionDestinos = descripcionDestinos.concat("- " + listaDestinosPopulares.get(destino)+"\n");
                         }
-                        textViewDestinos.setVisibility(View.VISIBLE);
                         textViewDestinos.setText(descripcionDestinos);
 
+                    } else {
+                        textViewDestinos.setText(descripcionDestinos);
                     }
                     cardInfo.setVisibility(View.VISIBLE);
                 }

@@ -285,10 +285,14 @@ public class MapActivityPresenter {
      * Realiza la inserción de los destinos populares a la base de datos.
      */
     private void registrarDestinosPopulares(){
+        // Ruta 1
+        // Ruta 17
         destinosPopulares.add(new Destino(22.761699845735176, -102.47971953676223, "Villas de Guadalupe"));     //1
         destinosPopulares.add(new Destino(22.769798545276643, -102.57201623073544, "Plaza Bicentenario"));      //2
         destinosPopulares.add(new Destino(22.7693660687711, -102.64226018750308, "Campus UAZ Siglo XXI"));      //3
         destinosPopulares.add(new Destino(22.77394069430427, -102.59732718456279, "Galerías Zacatecas"));       //4
+        destinosPopulares.add(new Destino(22.77565784990214, -102.57246845407059, "Catedral Basílica de Zacatecas")); //5
+
     }
 
     /**
@@ -823,6 +827,9 @@ public class MapActivityPresenter {
         destinosRutas.add(new DestinoRuta(new Destino(2), new Ruta(13)));
         destinosRutas.add(new DestinoRuta(new Destino(3), new Ruta(13)));
         destinosRutas.add(new DestinoRuta(new Destino(4), new Ruta(13)));
+
+        // DEstinos populares ruta 5
+        destinosRutas.add(new DestinoRuta(new Destino(5), new Ruta(6)));
     }
 
     /**
