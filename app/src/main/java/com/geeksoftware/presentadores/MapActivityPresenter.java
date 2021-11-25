@@ -129,6 +129,18 @@ public class MapActivityPresenter {
     }
 
     /**
+     * Extrae de la base de datos la descripción de cada destino correspondiente a una ruta.
+     */
+    public List<String> extraerDestinosRutaDescripcion(Integer idRuta){
+        List<Destino> listaDestinos = baseDatos.obtenerDestinosRuta(idRuta);
+        List<String> listaDestinosPopulares = new ArrayList<>();
+        for(int destino = 0; destino < listaDestinos.size(); destino++){
+            listaDestinosPopulares.add(listaDestinos.get(destino).getDescripcion());
+        }
+        return listaDestinosPopulares;
+    }
+
+    /**
      * Extrae la información de las rutas que se detienen en una determinada parada de autobus.
      * @param idParada Identificador de la parada a consultar sus rutas.
      * @param marcador Punto del mapa donde se mostrará la información de las rutas
