@@ -390,9 +390,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         }, 550);
                     }
 
-                    if (listaDestinosPopulares != null){
-                        listaDestinosPopulares.removeAll(listaDestinosPopulares);
-                    }
+                    listaDestinosPopulares = new ArrayList<>();
                     recorridoRuta.remove();
                     Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
                     presentador.cargarRecorridoRuta(rutaElegida);
@@ -558,10 +556,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (listaDestinosPopulares != null){
-                    listaDestinosPopulares.removeAll(listaDestinosPopulares);
-                }
-                //listaDestinosPopulares = new ArrayList<>();
+                listaDestinosPopulares = new ArrayList<>();
                 if(cardInfo.getVisibility() == View.VISIBLE){
                     cardInfo.setVisibility(View.GONE);
                 }
@@ -577,6 +572,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }catch (Exception e){
                     textViewDestinos.setText("Ocurrió un error al cargar los destinos populares");
                 }
+
 
                 // Se aleja la vista del mapa para que se logre apreciar el trazo de la ruta.
                 LatLng zacGpe = new LatLng(22.76424926, -102.5482729);
@@ -599,8 +595,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         }
                         textViewDestinos.setText(descripcionDestinos);
 
-                    } else {
-                        textViewDestinos.setText(descripcionDestinos);
                     }
                     cardInfo.setVisibility(View.VISIBLE);
                 }
