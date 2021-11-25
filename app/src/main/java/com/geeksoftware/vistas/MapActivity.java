@@ -378,7 +378,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     infoRuta.setVisibility(View.VISIBLE);
                     id_imagen = context.getResources().getIdentifier(rutaElegida.getImagen(), "drawable", context.getPackageName());
                     // obtener la lista de descripciones de los destinos populares
-                    listaDestinosPopulares = presentador.extraerDestinosRutaDescripcion(rutaElegida.getId());
+                    try {
+                        listaDestinosPopulares = presentador.extraerDestinosRutaDescripcion(rutaElegida.getId());
+                    }catch (Exception e){
+                        textViewDestinos.setText("Ocurrió un error al cargar los destinos populares");
+                    }
                 }
             }
         });
@@ -530,7 +534,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 infoRuta.setVisibility(View.VISIBLE);
                 id_imagen = context.getResources().getIdentifier(rutaElegida.getImagen(),"drawable",context.getPackageName());
                 // obtener la lista de descripciones de los destinos populares
-                listaDestinosPopulares = presentador.extraerDestinosRutaDescripcion(rutaElegida.getId());
+                try {
+                    listaDestinosPopulares = presentador.extraerDestinosRutaDescripcion(rutaElegida.getId());
+                }catch (Exception e){
+                    textViewDestinos.setText("Ocurrió un error al cargar los destinos populares");
+                }
+
                 // Se aleja la vista del mapa para que se logre apreciar el trazo de la ruta.
                 LatLng zacGpe = new LatLng(22.76424926, -102.5482729);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zacGpe,11.0f));
