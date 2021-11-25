@@ -3,7 +3,6 @@ package com.geeksoftware.vistas;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import android.app.AlertDialog;
 
@@ -20,7 +19,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -34,13 +32,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.geeksoftware.modelos.Destino;
 import com.geeksoftware.modelos.Parada;
 import com.geeksoftware.modelos.PuntoRuta;
 import com.geeksoftware.modelos.Ruta;
 import com.geeksoftware.presentadores.MapActivityPresenter;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.dynamic.IFragmentWrapper;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -215,7 +211,39 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 presentador.cargarRutas();
+            }
+        });
 
+        FloatingActionButton btnInfoRuta = (FloatingActionButton)findViewById(R.id.botonInfoRuta);
+        FloatingActionButton btnReiniciarMapa = (FloatingActionButton)findViewById(R.id.botonReiniciarMapa);
+        FloatingActionButton btnLimpiarMapa = (FloatingActionButton)findViewById(R.id.botonLimpiarMapa);
+        CardView cardInfo = (CardView) findViewById(R.id.cardInfoRutas);
+
+        // Evento para cuando se presiona el botón de Reiniciar el mapa.
+        btnReiniciarMapa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Cuando se presiona el botón se vuelven a cargar todas las paradas.
+                mMap.clear();
+                presentador.cargarParadas();
+                btnReiniciarMapa.setVisibility(View.GONE);
+                btnInfoRuta.setVisibility(View.GONE);
+                cardInfo.setVisibility(View.GONE);
+                btnLimpiarMapa.setVisibility(View.VISIBLE);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zacGpe,15.5f));
+            }
+        });
+
+        // Evento para cuando se presiona el botón de Limpiar el mapa.
+        btnLimpiarMapa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Cuando se presiona el botón se borran todas las paradas del mapa.
+                mMap.clear();
+                btnReiniciarMapa.setVisibility(View.VISIBLE);
+                btnInfoRuta.setVisibility(View.GONE);
+                cardInfo.setVisibility(View.GONE);
+                btnLimpiarMapa.setVisibility(View.GONE);
             }
         });
 
@@ -224,7 +252,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 225);
-            return;
         }else{
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locListener, Looper.getMainLooper());
         }
@@ -354,13 +381,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     mostrarAlertaActivarLocalizacion();
                 }
                 else {
-                    if (ubicacionActual == null){
+                    while (ubicacionActual == null){
                         // Temporizador para esperar a que la app obtenga la ubicación atual.
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                             }
-                        }, 1500);
+                        }, 550);
                     }
 
                     if (listaDestinosPopulares != null){
@@ -413,7 +440,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     // Este listener actualizara la ubicación actual del dispositivo cada segundo.
     public LocationListener locListener = new LocationListener() {
         public void onLocationChanged(Location location) {
+            // Actualiza la ubicación actual.
             ubicacionActual = new LatLng(location.getLatitude(), location.getLongitude());
+
+            if(paradaBajada !=  null) {
+                // Muestra una alerta si se esta cerca de la parada de bajada.
+                presentador.actualizarUbicacion(new LatLng(location.getLatitude(),
+                        location.getLongitude()));
+            }
         }
 
         public void onProviderDisabled(String provider) {
@@ -493,6 +527,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void mostrarRecorridoRuta(List<PuntoRuta> puntos, Ruta ruta) {
         mMap.clear();
+        FloatingActionButton btnReiniciarMapa = (FloatingActionButton)findViewById(R.id.botonReiniciarMapa);
+        FloatingActionButton btnLimpiarMapa = (FloatingActionButton)findViewById(R.id.botonLimpiarMapa);
+        btnReiniciarMapa.setVisibility(View.VISIBLE);
+        btnLimpiarMapa.setVisibility(View.VISIBLE);
         presentador.cargarParadasRuta(ruta.getId());
         recorridoRuta = mMap.addPolyline(new PolylineOptions().color(Color.parseColor(ruta.getColor())).geodesic(true));
         List<LatLng>puntosRuta = new ArrayList<>();

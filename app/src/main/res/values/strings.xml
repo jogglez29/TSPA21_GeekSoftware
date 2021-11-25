@@ -6,5 +6,7 @@
     <string name="ver_rutas">Ver rutas</string>
     <string name="destinos_populares">Destinos Populares</string>
     <string name="verInfoRuta">Ver información de la ruta</string>
+    <string name="reiniciarMapa">Reiniciar los elementos del mapa</string>
+    <string name="limpiarMapa">Limpiar el mapa</string>
     <string name="ImagenBus">Imágen del autobús</string>
 </resources>

@@ -113,5 +113,35 @@
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/botonReiniciarMapa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ver_rutas"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="506dp"
+        android:backgroundTint="@color/white"
+        android:clickable="true"
+        android:contentDescription="@string/reiniciarMapa"
+        android:focusable="true"
+        android:visibility="gone"
+        app:backgroundTint="@color/white"
+        app:srcCompat="@drawable/reiniciaricon" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/botonLimpiarMapa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ver_rutas"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="436dp"
+        android:backgroundTint="@color/white"
+        android:clickable="true"
+        android:contentDescription="@string/limpiarMapa"
+        android:focusable="true"
+        android:visibility="visible"
+        app:backgroundTint="@color/white"
+        app:srcCompat="@drawable/cleanicon" />
 </RelativeLayout>
