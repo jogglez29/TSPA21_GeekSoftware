@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -562,7 +563,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
                 recorridoRuta.remove();
                 Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
-                presentador.cargarRecorridoRuta(rutaElegida);
+                try {
+                    presentador.cargarRecorridoRuta(rutaElegida);
+                }
+                catch (Exception e){
+                    // Si no es posible obtener el recorrido o las paradas de la ruta, entonces se muestra un mensaje de error.
+                    mostrarMensaje("Ocurrió un error al cargar la información de la ruta","#dc143c","#FFFFFF");
+                }
+
                 dialog.dismiss();
                 infoRuta.setVisibility(View.VISIBLE);
                 id_imagen = context.getResources().getIdentifier(rutaElegida.getImagen(),"drawable",context.getPackageName());
@@ -572,7 +580,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }catch (Exception e){
                     textViewDestinos.setText("Ocurrió un error al cargar los destinos populares");
                 }
-
 
                 // Se aleja la vista del mapa para que se logre apreciar el trazo de la ruta.
                 LatLng zacGpe = new LatLng(22.76424926, -102.5482729);
@@ -625,6 +632,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void mostrarMensaje(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
     }
+
+    /**
+     * Crea y muestra un mensaje tipo Toast.
+     * @param mensaje Texto a incluir en el mensaje.
+     * @param colorFondo Color del Toast.
+     * @param colorTexto Color del texto que se mostrara.
+     */
+    private void mostrarMensaje(String mensaje, String colorFondo, String colorTexto) {
+        Toast toast = Toast.makeText(this, Html.fromHtml("<font color='" + colorTexto +
+                "' ><b>" + mensaje + "</b></font>"), Toast.LENGTH_LONG);
+        toast.getView().setBackgroundColor(Color.parseColor(colorFondo));
+
+        toast.show();
+    }
+
 
     /**
      * Verifica si la localización esta activada.
