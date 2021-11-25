@@ -285,13 +285,98 @@ public class MapActivityPresenter {
      * Realiza la inserción de los destinos populares a la base de datos.
      */
     private void registrarDestinosPopulares(){
-        // Ruta 1
-        // Ruta 17
+        /** Ruta 1 */
+        destinosPopulares.add(new Destino(22.771614851262754, -102.5748105237557,"Zacatecas Centro"));
+        destinosPopulares.add(new Destino(22.75174798707831, -102.60797105395031,"Las Huertas"));
+        destinosPopulares.add(new Destino(22.76409295831832, -102.67193388425694,"CERESO Cieneguillas"));
+        // Agregar Campus UAZ SIGLO XXI
+
+        /** Ruta 2 */
+        // Agregar Zacatecas Centro
+        destinosPopulares.add(new Destino(22.76535662129092, -102.5771306272761,"ISSSTE Hospital General Zacatecas"));
+        // Agregar IMSS Hospital General
+        destinosPopulares.add(new Destino(22.77894734995183, -102.58322780911689,"Lázaro Cárdenas"));
+
+        /** Ruta 3 */
+        // Agregar Plaza Bicentenario
+        destinosPopulares.add(new Destino(22.773458083263503, -102.54161867660719,"Polideportivo Zacatecas"));
+        destinosPopulares.add(new Destino(22.766286292235282, -102.5391002250543,"Los Pirules"));
+        destinosPopulares.add(new Destino(22.763717819605905, -102.54518468176917,"Avenida México"));
+
+        /** Ruta 4 */
+        destinosPopulares.add(new Destino(22.764646532723145, -102.57896039654615,"Máquina 30-30"));
+        destinosPopulares.add(new Destino(22.774936945639563, -102.57957781014714,"IMSS Hospital General"));
+        destinosPopulares.add(new Destino(22.770577761829475, -102.58538296190282,"Colonia La Minera"));
+        destinosPopulares.add(new Destino(22.77199973647815, -102.59663029726586,"Central de Abastos Zacatecas"));
+
+        /** Ruta 5 */
+        destinosPopulares.add(new Destino(22.77565784990214, -102.57246845407059, "Catedral Basílica de Zacatecas"));
+        destinosPopulares.add(new Destino(22.780808823796086, -102.57238466616607,"Museo Manuel Felguérez"));
+        destinosPopulares.add(new Destino(22.786786634081107, -102.56972155300794,"Fayuca Zacatecas"));
+        destinosPopulares.add(new Destino(22.753483999627935, -102.60551956634848,"Colonia Huerta Vieja"));
+
+        /** Ruta 6 */
+        destinosPopulares.add(new Destino(22.746040616284564, -102.51802501888909,"Museo de Guadalupe"));
+        destinosPopulares.add(new Destino(22.749328053621582, -102.51365213520836,"Presidencia Municipal de Guadalupe"));
+        destinosPopulares.add(new Destino(22.758418797111673, -102.5041352402746,"Soriana Mercado de Guadalupe"));
+        destinosPopulares.add(new Destino(22.767143314876236, -102.50060185439636,"Bodega Aurrera de Guadalupe"));
+
+        /** Ruta 7 */
+        destinosPopulares.add(new Destino(22.759596656890313, -102.5810290008761,"La Encantada"));
+        // Agregar Galerías Zac
+        destinosPopulares.add(new Destino(22.781614247967294, -102.61883183023056,"Fiscalía General de Justicia de Zacatecas"));
+        destinosPopulares.add(new Destino(22.784229837287523, -102.61570843785708,"UPIIZ"));
+
+        /** Ruta 8 */
+        destinosPopulares.add(new Destino(22.791865, -102.560027,"Bracho"));
+        // Agregar Catedral
+        destinosPopulares.add(new Destino(22.754742, -102.576453,"Central Camionera de Zacatecas"));
+        destinosPopulares.add(new Destino(22.746950, -102.590830,"Colinas del Padre 3ra Sección"));
+
+        /** Ruta 14 */
+        destinosPopulares.add(new Destino(22.716639, -102.489756,"UTZAC"));
+        destinosPopulares.add(new Destino(22.758917, -102.545407,"Sam's Club"));
+        // Agregar Plaza bicentenario
+        destinosPopulares.add(new Destino(22.763705, -102.582956,"Av. 5 Señores"));
+
+        /** Ruta 15 */
+        destinosPopulares.add(new Destino(22.698473, -102.524943,"San Ramón"));
+        destinosPopulares.add(new Destino(22.746920, -102.518788,"Centro de Guadalupe"));
+        destinosPopulares.add(new Destino(22.750180, -102.513986,"Antiguo mercado de Guadalupe"));
+        destinosPopulares.add(new Destino(22.758079, -102.498983,"La condesa"));
+
+        /** Ruta 16 */
+        destinosPopulares.add(new Destino(22.776282, -102.499255,"Unidad deportiva de Guadalupe"));
+        // Bicentenario
+        // Agregar presidencia de Zacatecas
+        // Agregar ISSSTE Zac
+
+        /** Ruta 17 */
         destinosPopulares.add(new Destino(22.761699845735176, -102.47971953676223, "Villas de Guadalupe"));     //1
         destinosPopulares.add(new Destino(22.769798545276643, -102.57201623073544, "Plaza Bicentenario"));      //2
         destinosPopulares.add(new Destino(22.7693660687711, -102.64226018750308, "Campus UAZ Siglo XXI"));      //3
         destinosPopulares.add(new Destino(22.77394069430427, -102.59732718456279, "Galerías Zacatecas"));       //4
-        destinosPopulares.add(new Destino(22.77565784990214, -102.57246845407059, "Catedral Basílica de Zacatecas")); //5
+
+        /** Transportes de Guadalupe */
+        destinosPopulares.add(new Destino(22.778459, -102.619871, "Hospital General Zacatecas"));
+        // Agregar UPIIZ
+        // Agregar Bicentenario
+        // Agregar Centro Guadalupe
+
+        /** Transportes de Guadalupe Tierra y Libertad */
+        // Agregar hospital General
+        // Agregar UPIIZ
+        // Bicentario
+        destinosPopulares.add(new Destino(22.763082, -102.510659, "Tierra y Libertad 2da sección"));
+
+        /** Ruta 2 Guadalupe */
+        destinosPopulares.add(new Destino(22.761992, -102.547475, "Soriana Híper"));
+        // Agregar presidencia de Guadalupe
+        destinosPopulares.add(new Destino(22.759354, -102.566558, "Colonia Alma Obrera"));
+        destinosPopulares.add(new Destino(22.755771, -102.521307, "Nissan Torres corzo"));
+
+        destinosPopulares.add(new Destino(22.774128, -102.587143, "Presidencia Municipal de Zacatecas"));
+
 
     }
 
@@ -822,14 +907,96 @@ public class MapActivityPresenter {
      * Solicita la inserción de la relación de un destino con una ruta en la base de datos.
      */
     private void registrarDestinoRutas(){
-        // Destinos populares Ruta 17
-        destinosRutas.add(new DestinoRuta(new Destino(1), new Ruta(13)));
-        destinosRutas.add(new DestinoRuta(new Destino(2), new Ruta(13)));
-        destinosRutas.add(new DestinoRuta(new Destino(3), new Ruta(13)));
-        destinosRutas.add(new DestinoRuta(new Destino(4), new Ruta(13)));
+        // Destinos populares Ruta 1
+        destinosRutas.add(new DestinoRuta(new Destino(1), new Ruta(1)));
+        destinosRutas.add(new DestinoRuta(new Destino(2), new Ruta(1)));
+        destinosRutas.add(new DestinoRuta(new Destino(3), new Ruta(1)));
+        destinosRutas.add(new DestinoRuta(new Destino(37), new Ruta(1)));
 
-        // DEstinos populares ruta 5
-        destinosRutas.add(new DestinoRuta(new Destino(5), new Ruta(6)));
+        // Destinos populares Ruta 2 Zacatecas
+        destinosRutas.add(new DestinoRuta(new Destino(1), new Ruta(2)));
+        destinosRutas.add(new DestinoRuta(new Destino(4), new Ruta(2)));
+        destinosRutas.add(new DestinoRuta(new Destino(10), new Ruta(2)));
+        destinosRutas.add(new DestinoRuta(new Destino(5), new Ruta(2)));
+
+        // Destinos populares Ruta 2 Guadalupe
+        destinosRutas.add(new DestinoRuta(new Destino(41), new Ruta(3)));
+        destinosRutas.add(new DestinoRuta(new Destino(18), new Ruta(3)));
+        destinosRutas.add(new DestinoRuta(new Destino(42), new Ruta(3)));
+        destinosRutas.add(new DestinoRuta(new Destino(43), new Ruta(3)));
+
+        // Destinos populares Ruta 3
+        destinosRutas.add(new DestinoRuta(new Destino(36), new Ruta(4)));
+        destinosRutas.add(new DestinoRuta(new Destino(6), new Ruta(4)));
+        destinosRutas.add(new DestinoRuta(new Destino(7), new Ruta(4)));
+        destinosRutas.add(new DestinoRuta(new Destino(8), new Ruta(4)));
+
+        // Destinos populares Ruta 4
+        destinosRutas.add(new DestinoRuta(new Destino(9), new Ruta(5)));
+        destinosRutas.add(new DestinoRuta(new Destino(10), new Ruta(5)));
+        destinosRutas.add(new DestinoRuta(new Destino(11), new Ruta(5)));
+        destinosRutas.add(new DestinoRuta(new Destino(12), new Ruta(5)));
+
+        // Destinos populares Ruta 5
+        destinosRutas.add(new DestinoRuta(new Destino(13), new Ruta(6)));
+        destinosRutas.add(new DestinoRuta(new Destino(14), new Ruta(6)));
+        destinosRutas.add(new DestinoRuta(new Destino(15), new Ruta(6)));
+        destinosRutas.add(new DestinoRuta(new Destino(16), new Ruta(6)));
+
+        // Destinos populares Ruta 6
+        destinosRutas.add(new DestinoRuta(new Destino(17), new Ruta(7)));
+        destinosRutas.add(new DestinoRuta(new Destino(18), new Ruta(7)));
+        destinosRutas.add(new DestinoRuta(new Destino(19), new Ruta(7)));
+        destinosRutas.add(new DestinoRuta(new Destino(20), new Ruta(7)));
+
+        // Destinos populares Ruta 7
+        destinosRutas.add(new DestinoRuta(new Destino(21), new Ruta(8)));
+        destinosRutas.add(new DestinoRuta(new Destino(38), new Ruta(8)));
+        destinosRutas.add(new DestinoRuta(new Destino(22), new Ruta(8)));
+        destinosRutas.add(new DestinoRuta(new Destino(23), new Ruta(8)));
+
+        // Destinos populares Ruta 8
+        destinosRutas.add(new DestinoRuta(new Destino(24), new Ruta(9)));
+        destinosRutas.add(new DestinoRuta(new Destino(13), new Ruta(9)));
+        destinosRutas.add(new DestinoRuta(new Destino(25), new Ruta(9)));
+        destinosRutas.add(new DestinoRuta(new Destino(26), new Ruta(9)));
+
+        // Destinos populares Ruta 14
+        destinosRutas.add(new DestinoRuta(new Destino(27), new Ruta(10)));
+        destinosRutas.add(new DestinoRuta(new Destino(28), new Ruta(10)));
+        destinosRutas.add(new DestinoRuta(new Destino(36), new Ruta(10)));
+        destinosRutas.add(new DestinoRuta(new Destino(29), new Ruta(10)));
+
+        // Destinos populares Ruta 15
+        destinosRutas.add(new DestinoRuta(new Destino(30), new Ruta(11)));
+        destinosRutas.add(new DestinoRuta(new Destino(31), new Ruta(11)));
+        destinosRutas.add(new DestinoRuta(new Destino(32), new Ruta(11)));
+        destinosRutas.add(new DestinoRuta(new Destino(33), new Ruta(11)));
+
+        // Destinos populares Ruta 16
+        destinosRutas.add(new DestinoRuta(new Destino(34), new Ruta(12)));
+        destinosRutas.add(new DestinoRuta(new Destino(36), new Ruta(12)));
+        destinosRutas.add(new DestinoRuta(new Destino(4), new Ruta(12)));
+        destinosRutas.add(new DestinoRuta(new Destino(44), new Ruta(12)));
+
+        // Destinos populares Ruta 17
+        destinosRutas.add(new DestinoRuta(new Destino(35), new Ruta(13)));
+        destinosRutas.add(new DestinoRuta(new Destino(36), new Ruta(13)));
+        destinosRutas.add(new DestinoRuta(new Destino(37), new Ruta(13)));
+        destinosRutas.add(new DestinoRuta(new Destino(38), new Ruta(13)));
+
+        // Destinos populares TG
+        destinosRutas.add(new DestinoRuta(new Destino(39), new Ruta(14)));
+        destinosRutas.add(new DestinoRuta(new Destino(23), new Ruta(14)));
+        destinosRutas.add(new DestinoRuta(new Destino(36), new Ruta(14)));
+        destinosRutas.add(new DestinoRuta(new Destino(31), new Ruta(14)));
+
+        // Destinos populares TG TyL
+        destinosRutas.add(new DestinoRuta(new Destino(39), new Ruta(15)));
+        destinosRutas.add(new DestinoRuta(new Destino(23), new Ruta(15)));
+        destinosRutas.add(new DestinoRuta(new Destino(36), new Ruta(15)));
+        destinosRutas.add(new DestinoRuta(new Destino(40), new Ruta(15)));
+
     }
 
     /**
