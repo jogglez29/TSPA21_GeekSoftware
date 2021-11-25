@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
+import android.app.AlertDialog;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -20,6 +22,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -95,6 +99,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private int id_imagen;
     /** Lista de destinos populares para la ruta **/
     private List<String> listaDestinosPopulares;
+    AlertDialog alerta = null;
+    LocationManager locationManager;
+    final Handler handler = new Handler();
 
 
     @Override
@@ -211,25 +218,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        // Evento para estar monitoreando la localización
-        LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 100,
-                new LocationListener() {
-                    @Override
-                    public void onLocationChanged(@NonNull Location location) {
-                        if(paradaBajada !=  null) {
-                            if(lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                                // La ubicación está activada.
-                                presentador.actualizarUbicacion(new LatLng(location.getLatitude(),
-                                        location.getLongitude()));
-
-                            } else {
-                                // La ubicación está desactivada.
-                                mostrarAlertaActivarUbicacion();
-                            }
-                        }
-                    }
-                });
+        // Se actualizara la ubicación actual del dispositivo cada segundo solo si la localización esta activada
+        // y se posee el permiso de localización.
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 225);
+            return;
+        }else{
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locListener, Looper.getMainLooper());
+        }
     }
 
     /**
@@ -351,20 +348,35 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                listaDestinosPopulares = new ArrayList<>();
-                recorridoRuta.remove();
-                Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
-                presentador.cargarRecorridoRuta(rutaElegida);
-                presentador.cargarParadaSubida(rutaElegida, ubicacionActual);
-                presentador.cargarParadaBajada(rutaElegida);
-                if(cardInfo.getVisibility() == View.VISIBLE){
-                    cardInfo.setVisibility(View.GONE);
+                // Si no esta activada la localización se nos mostrara una ventana en donde nos pediran activarla.
+                if(!verEstadoLocalizacion()){
+                    mostrarAlertaActivarLocalizacion();
                 }
-                dialog.dismiss();
-                infoRuta.setVisibility(View.VISIBLE);
-                id_imagen = context.getResources().getIdentifier(rutaElegida.getImagen(),"drawable",context.getPackageName());
-                // obtener la lista de descripciones de los destinos populares
-                listaDestinosPopulares = presentador.extraerDestinosRutaDescripcion(rutaElegida.getId());
+                else {
+                    if (ubicacionActual == null){
+                        // Temporizador para esperar a que la app obtenga la ubicación atual.
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                            }
+                        }, 1500);
+                    }
+
+                    listaDestinosPopulares = new ArrayList<>();
+                    recorridoRuta.remove();
+                    Ruta rutaElegida = (Ruta) adapterView.getItemAtPosition(i);
+                    presentador.cargarRecorridoRuta(rutaElegida);
+                    presentador.cargarParadaSubida(rutaElegida, ubicacionActual);
+                    presentador.cargarParadaBajada(rutaElegida);
+                    if (cardInfo.getVisibility() == View.VISIBLE) {
+                        cardInfo.setVisibility(View.GONE);
+                    }
+                    dialog.dismiss();
+                    infoRuta.setVisibility(View.VISIBLE);
+                    id_imagen = context.getResources().getIdentifier(rutaElegida.getImagen(), "drawable", context.getPackageName());
+                    // obtener la lista de descripciones de los destinos populares
+                    listaDestinosPopulares = presentador.extraerDestinosRutaDescripcion(rutaElegida.getId());
+                }
             }
         });
 
@@ -389,6 +401,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
     }
+
+    // Este listener actualizara la ubicación actual del dispositivo cada segundo.
+    public LocationListener locListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+            ubicacionActual = new LatLng(location.getLatitude(), location.getLongitude());
+        }
+
+        public void onProviderDisabled(String provider) {
+        }
+        public void onProviderEnabled(String provider) {
+        }
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+    };
 
     @Override
     public void resaltarParadaSubida(Parada parada) {
@@ -545,5 +571,58 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
      */
     private void mostrarMensaje(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * Verifica si la localización esta activada.
+     * @return Regresa true si la localización esta activada o false si no lo esta.
+     */
+    private boolean verEstadoLocalizacion(){
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        /* Verificamos si la localización esta activada o no */
+        if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Muestra una alerta en la que se pide que se active la localización del dispositivo movil.
+     */
+    private void mostrarAlertaActivarLocalizacion(){
+        // Se crea la alerta
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+        // Titulo de la alerta
+        alertDialog.setTitle("La localización esta desactivada");
+        // Mensaje que se mostrara en la alerta
+        alertDialog.setMessage("Para poder acceder a esta característica es necesario activar la localización");
+
+        alertDialog.setPositiveButton("Activar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        });
+
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                mostrarMensaje("Es necesario activar la localización para acceder a esta función");
+            }
+        });
+        alerta = alertDialog.create();
+        // Se muestra la alerta
+        alertDialog.show();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if(alerta != null)
+        {
+            alerta.dismiss ();
+        }
     }
 }
