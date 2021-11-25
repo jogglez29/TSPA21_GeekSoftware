@@ -363,12 +363,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 dialog.dismiss();
                 infoRuta.setVisibility(View.VISIBLE);
                 id_imagen = context.getResources().getIdentifier(rutaElegida.getImagen(),"drawable",context.getPackageName());
-                // obtener la lista de destinos populares
-                List<Destino> destinosPopulares = presentador.extraerDestinosRuta(rutaElegida.getId());
-                // Extraer la descripción de cada destino popular
-                for(int destino = 0; destino < destinosPopulares.size(); destino++){
-                    listaDestinosPopulares.add(destinosPopulares.get(destino).getDescripcion());
-                }
+                // obtener la lista de descripciones de los destinos populares
+                listaDestinosPopulares = presentador.extraerDestinosRutaDescripcion(rutaElegida.getId());
             }
         });
 
@@ -484,11 +480,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         FloatingActionButton infoRuta = (FloatingActionButton)findViewById(R.id.botonInfoRuta);
         ImageView imagenRuta = (ImageView) findViewById(R.id.imagenRuta);
+        TextView textViewDestinos = (TextView) findViewById(R.id.textDestinosPopulares);
         CardView cardInfo = (CardView) findViewById(R.id.cardInfoRutas);
         Context context = imagenRuta.getContext();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                listaDestinosPopulares = new ArrayList<>();
                 if(cardInfo.getVisibility() == View.VISIBLE){
                     cardInfo.setVisibility(View.GONE);
                 }
@@ -498,6 +496,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 dialog.dismiss();
                 infoRuta.setVisibility(View.VISIBLE);
                 id_imagen = context.getResources().getIdentifier(rutaElegida.getImagen(),"drawable",context.getPackageName());
+                // obtener la lista de descripciones de los destinos populares
+                listaDestinosPopulares = presentador.extraerDestinosRutaDescripcion(rutaElegida.getId());
              }
         });
 
@@ -508,6 +508,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     cardInfo.setVisibility(View.GONE);
                 }else{
                     imagenRuta.setImageResource(id_imagen);
+                    if (listaDestinosPopulares.size() != 0){
+                        String descripcionDestinos = "";
+                        for (int destino = 0; destino < listaDestinosPopulares.size(); destino++){
+                            descripcionDestinos = descripcionDestinos.concat("- " + listaDestinosPopulares.get(destino)+"\n");
+                        }
+                        textViewDestinos.setVisibility(View.VISIBLE);
+                        textViewDestinos.setText(descripcionDestinos);
+
+                    }
                     cardInfo.setVisibility(View.VISIBLE);
                 }
             }
