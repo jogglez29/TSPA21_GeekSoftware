@@ -232,6 +232,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 cardInfo.setVisibility(View.GONE);
                 btnLimpiarMapa.setVisibility(View.VISIBLE);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zacGpe,15.5f));
+                paradaBajada = null;
+                paradaSubida = null;
             }
         });
 
@@ -245,6 +247,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 btnInfoRuta.setVisibility(View.GONE);
                 cardInfo.setVisibility(View.GONE);
                 btnLimpiarMapa.setVisibility(View.GONE);
+                paradaBajada = null;
+                paradaSubida = null;
             }
         });
 
@@ -254,7 +258,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 225);
         }else{
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locListener, Looper.getMainLooper());
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 0, locListener, Looper.getMainLooper());
         }
     }
 
@@ -385,14 +389,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     mostrarAlertaActivarLocalizacion();
                 }
                 else {
-                    while (ubicacionActual == null){
-                        // Temporizador para esperar a que la app obtenga la ubicación atual.
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                            }
-                        }, 550);
-                    }
+                    // Temporizador para esperar a que la app obtenga la ubicación atual.
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                        }
+                    }, 1600);
 
                     listaDestinosPopulares = new ArrayList<>();
                     recorridoRuta.remove();
@@ -447,8 +449,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             if(paradaBajada !=  null) {
                 // Muestra una alerta si se esta cerca de la parada de bajada.
-                presentador.actualizarUbicacion(new LatLng(location.getLatitude(),
-                        location.getLongitude()));
+                presentador.actualizarUbicacion(ubicacionActual);
             }
         }
 
