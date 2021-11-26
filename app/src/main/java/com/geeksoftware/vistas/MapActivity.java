@@ -294,6 +294,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Log.i("ERR", "An error occurred: " + status);
             }
         });
+
+        // Se limitan las búsquedas a México
+        autocompleteFragment.setCountry("MX");
     }
 
     /**
